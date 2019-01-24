@@ -1,0 +1,5 @@
+# ignore codes
+GLDemo/GLDemo/Debug/
+GLDemo/Debug/
+GLDemo/x64/
+GLDemo/.vs/
