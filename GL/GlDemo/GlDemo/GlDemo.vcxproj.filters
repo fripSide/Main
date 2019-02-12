@@ -16,11 +16,11 @@
     <Filter Include="Source Files\temp">
       <UniqueIdentifier>{13013a3a-c5a3-44bf-9584-7e46c48a245d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\shaders">
-      <UniqueIdentifier>{1406bcdb-a787-447c-a737-138cdbd67016}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\engine">
       <UniqueIdentifier>{5ad607e4-5789-4b8c-8d5b-adf500ef0974}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\shader">
+      <UniqueIdentifier>{1406bcdb-a787-447c-a737-138cdbd67016}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
