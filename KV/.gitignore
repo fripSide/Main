@@ -1,0 +1,6 @@
+# ignore codes
+LevelDB/LevelDB/Debug/
+LevelDB/Debug/
+LevelDB/LevelDB/tmp/
+LevelDB/x64/
+LevelDB/.vs/
