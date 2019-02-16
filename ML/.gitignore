@@ -1,3 +1,4 @@
 # ignore codes
 
 .ipynb_checkpoints/
+*.csv
