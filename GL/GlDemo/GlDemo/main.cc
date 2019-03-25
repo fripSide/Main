@@ -2,6 +2,15 @@
 #include "MyFirstRender.h"
 #include <iostream>
 
+/*
+TODO:
+0. quad地板，sqaure模型，ball球，fps相机
+1. 基本光照
+2. 阴影
+
+
+*/
+
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
