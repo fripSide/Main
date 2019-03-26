@@ -18,6 +18,8 @@ namespace GLDemo {
 	class Meterial {
 	protected:
 		Shader *m_Shader;
+	public:
+		Shader* GetShader();
 	};
 
 	class Mesh {
@@ -28,8 +30,11 @@ namespace GLDemo {
 		std::vector<glm::vec3> Positions;
 		std::vector<glm::vec2> UV;
 		std::vector<glm::vec3> Normals;
+		std::vector<unsigned int> Indices;
+		GLenum drawMode = GL_TRIANGLES;
 
 	public:
+		Mesh();
 		void Draw();
 	};
 
@@ -38,9 +43,14 @@ namespace GLDemo {
 		Mesh *mesh;
 		Meterial *mtl;
 
-
-	private:
 		RenderObject *parent;
 		std::vector<RenderObject*> m_Children;
+
+	public:
+		void AddChild(RenderObject *child);
+		void Draw();
+
+	private:
+		void DoDraw();
 	};
 }

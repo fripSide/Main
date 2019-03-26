@@ -1,5 +1,6 @@
 #include "utils.h"
 #include "MyFirstRender.h"
+#include "DemoRender.h"
 #include <iostream>
 
 /*
@@ -8,7 +9,6 @@ TODO:
 1. 基本光照
 2. 阴影
 
-
 */
 
 // settings
@@ -16,6 +16,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 MyFirstRender render;
+DemoRender demo;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -43,12 +44,14 @@ int main() {
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	render.onSurfaceCreated();
+	//render.onSurfaceCreated();
+	demo.onSurfaceCreated();
 
 	// main loop
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
-		render.onDrawFrame();
+		//render.onDrawFrame();
+		demo.onDrawFrame();
 		// process event
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -68,4 +71,5 @@ void processInput(GLFWwindow *window)
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	render.onSurfaceChanged(width, height);
+	demo.onSurfaceChanged(width, height);
 }

@@ -2,12 +2,14 @@
 #include "RenderObject.h"
 
 namespace GLDemo {
-	class Quad : Mesh {
-
+	class QuadMesh : public Mesh {
+	public:
+		QuadMesh();
 	};
 
-	class Plane : RenderObject {
-
+	class Plane : public RenderObject {
+	public:
+		Plane();
 	};
 
 }
