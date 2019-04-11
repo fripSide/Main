@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DemoRender.cpp" />
     <ClCompile Include="main.cc" />
     <ClCompile Include="MyFirstRender.cpp" />
@@ -134,7 +135,7 @@
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="DemoRender.h" />
     <ClInclude Include="MyFirstRender.h" />
     <ClInclude Include="Render.h" />
