@@ -20,6 +20,10 @@ namespace GLDemo {
 		Shader *m_Shader;
 	public:
 		Shader* GetShader();
+		const std::vector<std::string> & GetUnifromNames();
+
+	private:
+		std::vector<std::string> unfirom_names_;
 	};
 
 	class Mesh {
@@ -36,21 +40,33 @@ namespace GLDemo {
 	public:
 		Mesh();
 		void Draw();
+		void Init();
 	};
 
 	class RenderObject {
 	public:
-		Mesh *mesh;
-		Meterial *mtl;
+		Mesh *mesh_;
+		Meterial *mtl_;
 
-		RenderObject *parent;
-		std::vector<RenderObject*> m_Children;
+		RenderObject *parent_;
+		std::vector<RenderObject*> children_;
 
 	public:
 		void AddChild(RenderObject *child);
 		void Draw();
+		void SetTransfrom(const glm::mat4 &trans);
+		glm::mat4 GetTransfrom();
+		void SetPosition(const glm::vec3 &position);
+		glm::vec3 GetLocalPostion();
+		glm::vec3 GetWorldPostion();
 
 	private:
 		void DoDraw();
+		void SetupUniforms();
+
+	private:
+		glm::mat4 transform_ = glm::mat4(1);
+		glm::vec3 position_= glm::vec3(0);
+		bool dirty_;
 	};
 }

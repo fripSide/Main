@@ -5,9 +5,24 @@
 
 /*
 TODO:
+https://blog.csdn.net/wangdingqiaoit/article/details/51570001
+使用框架重做3d雪人作业。
+
+当前：屏幕中画三角形。
 0. quad地板，sqaure模型，ball球，fps相机
 1. 基本光照
 2. 阴影
+
+
+架构，不同的pass，生成到单独的rendertarget，然后再后处理到屏幕。
+render pass:
+D:\Projects\sai\wing3d\main\source\core\renderer.cpp
+
+TODO:
+1. 基于OpenGL封装框架
+2. 实现LearnOpenGL全部的教程
+3. Load模型。
+4. 实现脚本。
 
 */
 
@@ -15,12 +30,14 @@ TODO:
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-MyFirstRender render;
-DemoRender demo;
+Render *render;
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
 int main() {
+	//render = new MyFirstRender;
+	render = new DemoRender;
 	// opengl init
 	InitOpenGL();
 
@@ -45,13 +62,13 @@ int main() {
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//render.onSurfaceCreated();
-	demo.onSurfaceCreated();
+	render->onSurfaceCreated();
 
 	// main loop
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
 		//render.onDrawFrame();
-		demo.onDrawFrame();
+		render->onDrawFrame();
 		// process event
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -70,6 +87,6 @@ void processInput(GLFWwindow *window)
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-	render.onSurfaceChanged(width, height);
-	demo.onSurfaceChanged(width, height);
+	render->onSurfaceChanged(width, height);
+	render->onSurfaceChanged(width, height);
 }
