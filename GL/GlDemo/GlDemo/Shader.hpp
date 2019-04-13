@@ -8,6 +8,16 @@
 #include <sstream>
 #include <iostream>
 
+namespace GLDemo {
+
+	struct UniformTextureSampler {
+		unsigned int unit_;
+		union {
+
+		};
+
+	};
+
 class Shader {
 public:
 	GLuint ID;
@@ -186,3 +196,4 @@ private:
 	}
 
 };
+}

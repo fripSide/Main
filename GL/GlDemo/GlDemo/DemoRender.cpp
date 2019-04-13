@@ -88,6 +88,12 @@ void test_camera(World & world) {
 	glm::vec3 u3;
 }
 
+/*
+TODO:
+方块加贴图，基础变换让方块动起来
+FPS相机
+投影变换
+*/
 void DemoRender::onSurfaceCreated() {
 	// 基础变换
 	//test_baisc_transfrom(world);

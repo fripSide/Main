@@ -15,6 +15,8 @@ namespace GLDemo {
 		TRIANGLE_FAN,
 	};
 
+
+
 	class Meterial {
 	protected:
 		Shader *m_Shader;

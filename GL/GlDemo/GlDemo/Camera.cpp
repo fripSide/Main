@@ -27,12 +27,10 @@ glm::mat4 Camera::lookAt(glm::vec3 eye, glm::vec3 target, glm::vec3 viewUp) {
 	则：P2 = C-1 * P1
 	世界坐标下所有点乘以 相机基矩阵的逆矩阵，即可获得相机坐标系下的坐标。
 	所以相机变换（视变换）矩阵为：
-	|-               -| -1
-	| rx, ux, -fx, Ex |
+	| rx, ux, -fx, Ex |-1
 	| ry, uy, -fy, Ey | 
 	| rz, uz, -fz, Ez |
 	| 0,  0,   0,  1  |
-	|-               -|
 	其逆矩阵为：
 	|A  B|-1 = |A-1 -(A-1)B(D-1)|
 	|0  D|     | 0  D-1         |
