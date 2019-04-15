@@ -15,10 +15,11 @@ glm::mat4 Camera::GetViewMatrix() {
 	return glm::mat4();
 }
 
-glm::mat4 Camera::lookAt(glm::vec3 eye, glm::vec3 target, glm::vec3 up) {
+glm::mat4 Camera::lookAt(glm::vec3 eye, glm::vec3 target, glm::vec3 viewUp) {
 	// 视变换，以相机正方向为负z轴，以up为y轴，将其他的东西变换到这个坐标系
 	glm::vec3 f = glm::normalize(target - eye);
-	//glm::vec3 s = 
+	glm::vec3 r = glm::normalize(glm::cross(f, viewUp));
+	glm::vec3 u = glm::normalize(glm::cross(r, f));
 	return glm::mat4();
 }
 

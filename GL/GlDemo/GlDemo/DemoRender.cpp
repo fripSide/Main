@@ -2,6 +2,7 @@
 #include "RenderObject.h"
 #include "SceneObjects.h"
 #include "glm/glm.hpp"
+#include "Camera.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace GLDemo;
@@ -22,5 +23,7 @@ void DemoRender::onSurfaceCreated() {
 	glm::mat4 trans;
 	trans = glm::translate(trans, glm::vec3(0.2, 0.5, 0.2));
 	cb->SetTransfrom(trans);
+	Camera ca(glm::vec3(1), glm::vec3(3));
+	auto t = ca.lookAt(glm::vec3(1), glm::vec3(3), glm::vec3(1));
 	world.AddChildNode(cb);
 }
