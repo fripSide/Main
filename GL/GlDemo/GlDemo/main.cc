@@ -33,6 +33,8 @@ const unsigned int SCR_HEIGHT = 600;
 Render *render;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 
 int main() {
@@ -89,4 +91,12 @@ void processInput(GLFWwindow *window)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	render->onSurfaceChanged(width, height);
 	render->onSurfaceChanged(width, height);
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+
 }

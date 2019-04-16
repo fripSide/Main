@@ -8,6 +8,42 @@
 #include <sstream>
 #include <iostream>
 
+namespace GLDemo {
+
+	enum ShaderValueType {
+		SHADER_VALUE_BOOL,
+		SHADER_VALUE_INT,
+		SHADER_VALUE_SAMPLER1D,
+		SHADER_VALUE_SAMPLER2D,
+		SHADER_VALUE_SAMPLER3D
+	};
+
+	struct Uniform {
+		ShaderValueType val_type_;
+
+	};
+
+	struct UniformValue {
+		ShaderValueType val_type_;
+		union
+		{
+			bool val_bool_;
+			int val_int_;
+			float val_foat_;
+			glm::vec3 vec3_;
+			glm::vec4 vec4_;
+		};
+	};
+
+	class Texture;
+	struct UniformTextureSampler {
+		ShaderValueType val_type;
+		unsigned int unit_;
+		union {
+			Texture * texture_;
+		};
+	};
+
 class Shader {
 public:
 	GLuint ID;
@@ -186,3 +222,4 @@ private:
 	}
 
 };
+}

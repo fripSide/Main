@@ -23,6 +23,7 @@
     <ProjectGuid>{9BA7AFD4-A48E-40B3-AE82-12ECB49F8C9B}</ProjectGuid>
     <RootNamespace>GlDemo</RootNamespace>
     <ProjectName>GLDemo</ProjectName>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -127,22 +128,22 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DemoRender.cpp" />
     <ClCompile Include="main.cc" />
-    <ClCompile Include="MyFirstRender.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="SceneObjects.cpp" />
     <ClCompile Include="stb_image.cc" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DemoRender.h" />
-    <ClInclude Include="MyFirstRender.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="SceneObjects.h" />
     <ClInclude Include="Shader.hpp" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

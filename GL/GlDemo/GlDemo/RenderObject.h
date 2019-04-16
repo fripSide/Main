@@ -2,6 +2,7 @@
 #include "Shader.hpp"
 #include <vector>
 #include <glad/glad.h> 
+#include <map>
 
 namespace GLDemo {
 
@@ -15,15 +16,24 @@ namespace GLDemo {
 		TRIANGLE_FAN,
 	};
 
+
+	/*
+	将Unifroms参数保存到material中，在渲染器修改。
+	shader.use()之后需要再设置一次uniforms
+	*/
 	class Meterial {
 	protected:
-		Shader *m_Shader;
+		Shader *shader_;
 	public:
 		Shader* GetShader();
 		const std::vector<std::string> & GetUnifromNames();
+		void SetTexture(std::string name, Texture *val, unsigned int unit);
+		void SetupUniforms();
 
-	private:
-		std::vector<std::string> unfirom_names_;
+	protected:
+		std::map<std::string, UniformValue> uniforms_;
+		// textures
+		std::map<std::string, UniformTextureSampler> samplerUniforms_;
 	};
 
 	class Mesh {

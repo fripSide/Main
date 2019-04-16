@@ -2,6 +2,9 @@
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
 
+
+using namespace GLDemo;
+
 void MyFirstRender::onSurfaceChanged(int width, int height) {
 	glViewport(0, 0, width, height);
 }

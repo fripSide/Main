@@ -1,4 +1,5 @@
 #include "RenderObject.h"
+#include "Texture.h"
 
 using namespace GLDemo;
 
@@ -42,17 +43,17 @@ void Mesh::Init() {
 	size_t offset = 0, strip = 0;
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, strip, (void*) offset);
-	offset += sizeof(GLfloat) * Positions.size();
+	offset += 3* sizeof(GLfloat) * Positions.size();
 	if (UV.size() > 0) {
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, strip, (void*)offset);
-		offset += sizeof(GLfloat) * UV.size();
+		offset += 2 * sizeof(float) * UV.size();
 	}
 
 	if (Normals.size() > 0) {
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, strip, (void*)offset);
-		offset += sizeof(GLfloat) * Normals.size();
+		offset += 3 * sizeof(GLfloat) * Normals.size();
 	}
 
 	glBindVertexArray(NULL);
@@ -84,11 +85,49 @@ void RenderObject::Draw() {
 }
 
 Shader* Meterial::GetShader() {
-	return m_Shader;
+	return shader_;
 }
 
 const std::vector<std::string> & Meterial::GetUnifromNames() {
 	return {"mvp"};
+}
+
+/*
+绑定纹理：
+设置每个纹理 sample名称对应的unit
+*/
+void Meterial::SetTexture(std::string name, Texture *val, unsigned int unit) {
+	if (val == NULL) return;
+	samplerUniforms_[name].unit_ = unit;
+	samplerUniforms_[name].texture_ = val;
+
+	switch (val->target_) 
+	{
+	case GL_TEXTURE_2D:
+		samplerUniforms_[name].val_type = SHADER_VALUE_SAMPLER2D;
+		break;
+	default:
+		break;
+	}
+
+	if (shader_) {
+		shader_->use();
+		shader_->setInt(name, unit);
+	}
+}
+
+// 设置纹理和其他材质的unifroms
+void Meterial::SetupUniforms() {
+	for (auto & it: samplerUniforms_) {
+		if (it.second.val_type == SHADER_VALUE_SAMPLER3D) {
+
+		} else {
+			it.second.texture_->Bind(it.second.unit_);
+		}
+	}
+	for (auto & it : uniforms_) {
+
+	}
 }
 
 void RenderObject::DoDraw() {
@@ -133,6 +172,11 @@ void RenderObject::SetPosition(const glm::vec3 &position) {
 
 void RenderObject::SetupUniforms() {
 	// set mvp
+	auto & world_uniforms = mtl_->GetUnifromNames();
+	//auto &world = World::
 	auto mvp = GetTransfrom();
 	mtl_->GetShader()->setMat4("mvp", mvp);
+
+	mtl_->SetupUniforms();
+	
 }

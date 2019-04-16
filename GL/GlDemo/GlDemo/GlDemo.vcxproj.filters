@@ -27,9 +27,6 @@
     <ClCompile Include="stb_image.cc">
       <Filter>Source Files\temp</Filter>
     </ClCompile>
-    <ClCompile Include="MyFirstRender.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
     <ClCompile Include="main.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -51,13 +48,13 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MyFirstRender.h">
-      <Filter>Source Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="Render.h">
       <Filter>Header Files</Filter>
@@ -81,6 +78,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

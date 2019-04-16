@@ -2,6 +2,7 @@
 #include "Render.h"
 #include "Shader.hpp"
 
+using namespace GLDemo;
 class MyFirstRender : public Render {
 public:
 	void onDrawFrame() override;
