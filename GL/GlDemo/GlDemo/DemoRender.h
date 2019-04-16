@@ -14,5 +14,10 @@ namespace GLDemo {
 		void onMouseEvent(double xpos, double ypos) override;
 	private:
 		GLDemo::World world;
+
+		// mouse event
+		double lastX_;
+		double lastY_;
+
 	};
 }

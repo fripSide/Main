@@ -117,7 +117,11 @@ void DemoRender::onKeyEvent(GLFWwindow *window) {
 }
 
 void DemoRender::onMouseEvent(double xpos, double ypos) {
-
+	double xOffset = xpos - lastX_;
+	double yOffset = lastY_ - ypos;
+	lastX_ = xpos;
+	lastY_ = ypos;
+	
 }
 
 /*

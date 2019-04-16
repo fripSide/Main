@@ -16,5 +16,8 @@ namespace GLDemo {
 		void Update();
 
 		void AddChildNode(RenderObject *node);
+
+	public:
+		Camera mainCamera_;
 	};
 }
