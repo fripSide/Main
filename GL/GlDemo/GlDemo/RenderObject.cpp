@@ -1,5 +1,6 @@
 #include "RenderObject.h"
 #include "Texture.h"
+#include "World.h"
 
 using namespace GLDemo;
 
@@ -60,6 +61,7 @@ void Mesh::Init() {
 }
 
 void Mesh::Draw() {
+	assert(m_VAO != 0);
 	glBindVertexArray(m_VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 	if (Indices.size() > 0) {
@@ -170,11 +172,16 @@ void RenderObject::SetPosition(const glm::vec3 &position) {
 	position_ = position;
 }
 
+// Í¶Ó°±ä»»²âÊÔ
 void RenderObject::SetupUniforms() {
 	// set mvp
 	auto & world_uniforms = mtl_->GetUnifromNames();
 	//auto &world = World::
 	auto mvp = GetTransfrom();
+	auto camera = World::Instance()->mainCamera_;
+	auto v = camera.GetViewMatrix();
+	//auto p = 
+	//auto pj = 
 	mtl_->GetShader()->setMat4("mvp", mvp);
 
 	mtl_->SetupUniforms();

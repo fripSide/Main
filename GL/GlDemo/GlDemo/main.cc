@@ -80,23 +80,35 @@ int main() {
 	return 0;
 }
 
+// 暂时只考虑同时按一个键
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window)
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	int key = 0;
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
+		key = GLFW_KEY_ESCAPE;
+	}
+	int key_list[] = {
+		GLFW_KEY_W, GLFW_KEY_A, GLFW_KEY_S, GLFW_KEY_D,
+		GLFW_KEY_RIGHT, GLFW_KEY_LEFT, GLFW_KEY_DOWN, GLFW_KEY_UP
+	};
+	for (auto k : key_list) {
+		if (glfwGetKey(window, k) == GLFW_PRESS) {
+			render->onKeyEvent(k);
+		}
+	}
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	render->onSurfaceChanged(width, height);
-	render->onSurfaceChanged(width, height);
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
-
+	render->onMouseEvent(xpos, ypos);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-
+	
 }

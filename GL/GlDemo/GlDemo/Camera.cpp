@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace GLDemo;
 
@@ -54,11 +55,31 @@ glm::mat4 Camera::lookAt(glm::vec3 eye, glm::vec3 target, glm::vec3 viewUp) {
 	return view;
 }
 
+/*
+https://blog.csdn.net/wangdingqiaoit/article/details/51589825#comments
+fov为视角
+aspect宽高比
+h = near * tan(fov / 2) (矩形高度的一半)
+w = h * aspect
 
+*/
 glm::mat4 Camera::Perspective(float fov, float aspect, float near, float far) {
-	return glm::mat4();
+	float tanHalfOfFov = tan(fov / 2.0f);
+
+	glm::mat4 my = {
+		glm::vec4(1 / (aspect * tanHalfOfFov), 0, 0, 0),
+		glm::vec4(0, 1 / tanHalfOfFov, 0, 0),
+		glm::vec4(0, 0, (far + near) / (near - far), 2 * far * near / (near - far)),
+		glm::vec4(0, 0, -1, 0),
+	};
+	projection_mat_ = glm::perspective(fov, aspect, near, far);
+	return projection_mat_;
 }
 
 glm::mat4 Camera::Orthographic(float left, float right, float bottom, float top, float zNear, float zFar) {
 	return glm::mat4();
+}
+
+glm::mat4 Camera::GetProjectMatrix() {
+	return projection_mat_;
 }

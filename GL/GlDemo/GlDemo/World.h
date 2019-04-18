@@ -1,4 +1,5 @@
 #pragma once
+#include "camera.h"
 
 /*
 包括一个active_scene和其他的render target scene
@@ -6,15 +7,19 @@
 */
 namespace GLDemo {
 	class RenderObject;
+	class Camera;
 
 	class World {
 	private:
-		RenderObject *root;
-	
-	public:
+		static World *instance_;
 		World();
-		void Update();
+		~World();
+		RenderObject *root;
+		
 
+	public:
+		static World* Instance();
+		void Update();
 		void AddChildNode(RenderObject *node);
 
 	public:

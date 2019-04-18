@@ -1,6 +1,7 @@
 #include "DemoRender.h"
 #include "RenderObject.h"
-#include "SceneObjects.h"
+#include "Meshes.h"
+
 #include "glm/glm.hpp"
 #include "Camera.h"
 #include <glm/gtc/matrix_transform.hpp>
@@ -98,7 +99,7 @@ void test_texture_mix(World & world) {
 	p->mtl_->SetTexture("texture2", Texture::LoadTexture("res/awesomeface.png"), 1);
 	// 绕x轴旋转180度变成正脸
 	p->SetTransfrom(glm::rotate(glm::mat4(), M_PI, {1, 0, 0}));
-	world.AddChildNode(p);
+	//world.AddChildNode(p);
 
 	// cube添加贴图
 	c = new Cube;
@@ -109,10 +110,31 @@ void test_texture_mix(World & world) {
 	tran = glm::rotate(tran, (GLfloat)glfwGetTime() * 0.1f, glm::vec3(0.0f, 0.1f, 0.0f));
 	c->SetTransfrom(tran);
 
-	world.AddChildNode(c);
+	//world.AddChildNode(c);
+	tran = glm::scale(tran, {0.1, 0.1, 0.1});
+	auto t = new Teapot;
+	t->SetTransfrom(tran);
+	world.AddChildNode(t);
 }
 
-void DemoRender::onKeyEvent(GLFWwindow *window) {
+void DemoRender::onKeyEvent(int key_code) {
+	Log("key_code %d\n", key_code);
+
+	if (key_code == GLFW_KEY_W || key_code == GLFW_KEY_UP) {
+		world->mainCamera_.position_ += world->mainCamera_.front_ * delta_time;
+	}
+
+	if (key_code == GLFW_KEY_A || key_code == GLFW_KEY_LEFT) {
+		world->mainCamera_.position_ += world->mainCamera_.front_ * delta_time;
+	}
+
+	if (key_code == GLFW_KEY_S || key_code == GLFW_KEY_DOWN) {
+		world->mainCamera_.position_ += world->mainCamera_.front_ * delta_time;
+	}
+
+	if (key_code == GLFW_KEY_D || key_code == GLFW_KEY_RIGHT) {
+		world->mainCamera_.position_ += world->mainCamera_.front_ * delta_time;
+	}
 
 }
 
@@ -134,19 +156,27 @@ FPS相机 (相机可移动)
 TODO: 第一次重构，将Scene对象组织为基于map<int, obj>的基于id的管理，避免直接管理指针。
 */
 void DemoRender::onSurfaceCreated() {
+	world = World::Instance();
+	// 设置相机位置：
+	world->mainCamera_;
+
 	// 基础变换
 	//test_baisc_transfrom(world);
 	//test_camera(world);
-	test_texture_mix(world);
+	test_texture_mix(*world);
 }
 
 
 void DemoRender::onDrawFrame() {
+	float current_ti = glfwGetTime();
+	delta_time = current_ti - last_frame_ti;
+	last_frame_ti = current_ti;
+
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glm::mat4 tran;
 	//tran = glm::translate(glm::mat4(), { 0.3f, 0.3f, 0.f });
 	tran = glm::rotate(tran, 0.1f, glm::vec3(0.0f, 0.1f, 0.0f));
-	c->SetTransfrom(tran);
-	world.Update();
+	//c->SetTransfrom(tran);
+	world->Update();
 }

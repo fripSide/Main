@@ -15,6 +15,11 @@ namespace GLDemo {
 		CubeMesh();
 	};
 
+	class TeapotMesh : public Mesh {
+	public:
+		TeapotMesh();
+	};
+
 	class Plane : public RenderObject {
 	public:
 		Plane();
@@ -28,5 +33,13 @@ namespace GLDemo {
 	class BaseLightMeterial : public Meterial {
 	public:
 		BaseLightMeterial();
+	};
+
+	class Teapot : public RenderObject {
+	public:
+		Teapot() {
+			mesh_ = new TeapotMesh();
+			mtl_ = new BaseLightMeterial();
+		}
 	};
 }
