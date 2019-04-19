@@ -62,10 +62,11 @@ int main() {
 	}
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glEnable(GL_DEPTH_TEST);
 
 	//render.onSurfaceCreated();
 	render->onSurfaceCreated();
-
+	
 	// main loop
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);

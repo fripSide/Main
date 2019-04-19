@@ -42,7 +42,6 @@ QuadMesh::QuadMesh() {
 
 CubeMesh::CubeMesh() {
 	Positions.clear();
-	Positions.emplace_back(-0.5, -0.5, -0.5);
 	Positions.emplace_back(-0.5f, -0.5f, -0.5f);
 	Positions.emplace_back(0.5f, 0.5f, -0.5f);
 	Positions.emplace_back(0.5f, -0.5f, -0.5f),

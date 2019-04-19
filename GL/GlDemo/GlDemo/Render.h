@@ -12,6 +12,9 @@ namespace GLDemo {
 		virtual void onSurfaceChanged(int width, int height) = 0;
 		virtual void onKeyEvent(int key_code) = 0;
 		virtual void onMouseEvent(double xpos, double ypos) = 0;
+
+		// 后处理函数
+		void onRenderImage() {};
 	protected:
 		Render() {};
 	};

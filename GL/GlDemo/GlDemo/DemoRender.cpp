@@ -98,7 +98,7 @@ void test_texture_mix(World & world) {
 	// OpenGL要求y轴0.0坐标是在图片的底部的，但是图片的y轴0.0坐标通常在顶部，所以看起来是上下颠倒的
 	p->mtl_->SetTexture("texture2", Texture::LoadTexture("res/awesomeface.png"), 1);
 	// 绕x轴旋转180度变成正脸
-	p->SetTransfrom(glm::rotate(glm::mat4(), M_PI, {1, 0, 0}));
+	//p->SetTransfrom(glm::rotate(glm::mat4(), M_PI, {1, 0, 0}));
 	//world.AddChildNode(p);
 
 	// cube添加贴图
@@ -106,15 +106,16 @@ void test_texture_mix(World & world) {
 	c->mtl_->SetTexture("texture1", Texture::LoadTexture("res/container.jpg"), 0);
 	c->mtl_->SetTexture("texture2", Texture::LoadTexture("res/awesomeface.png"), 1);
 	glm::mat4 tran;
-	tran = glm::translate(glm::mat4(), { 0.3f, 0.3f, 0.f });
+	tran = glm::translate(glm::mat4(), { 0.3f, 0.3f, -0.5f });
 	tran = glm::rotate(tran, (GLfloat)glfwGetTime() * 0.1f, glm::vec3(0.0f, 0.1f, 0.0f));
 	c->SetTransfrom(tran);
+	world.AddChildNode(c);
 
 	//world.AddChildNode(c);
 	tran = glm::scale(tran, {0.1, 0.1, 0.1});
 	auto t = new Teapot;
 	t->SetTransfrom(tran);
-	world.AddChildNode(t);
+	//world.AddChildNode(t);
 }
 
 void DemoRender::onKeyEvent(int key_code) {
@@ -149,8 +150,8 @@ void DemoRender::onMouseEvent(double xpos, double ypos) {
 /*
 TODO:
 1. 支持贴图（done）。方块加贴图，便于区分旋转角度，基础变换让方块动起来。
+投影变换 （在投影变换之前，矩形经过透视除法，看起来会随屏幕比列发生变化）(推导)
 FPS相机 (相机可移动)
-投影变换 （在投影变换之前，矩形经过透视除法，看起来会随屏幕比列发生变化）
 
 
 TODO: 第一次重构，将Scene对象组织为基于map<int, obj>的基于id的管理，避免直接管理指针。
@@ -158,7 +159,7 @@ TODO: 第一次重构，将Scene对象组织为基于map<int, obj>的基于id的管理，避免直接管理
 void DemoRender::onSurfaceCreated() {
 	world = World::Instance();
 	// 设置相机位置：
-	world->mainCamera_;
+	world->mainCamera_.Perspective(glm::radians(45.0f), 4 / 3.f, 0.1f, 100.f);
 
 	// 基础变换
 	//test_baisc_transfrom(world);
@@ -171,12 +172,15 @@ void DemoRender::onDrawFrame() {
 	float current_ti = glfwGetTime();
 	delta_time = current_ti - last_frame_ti;
 	last_frame_ti = current_ti;
-
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
 	glm::mat4 tran;
 	//tran = glm::translate(glm::mat4(), { 0.3f, 0.3f, 0.f });
-	tran = glm::rotate(tran, 0.1f, glm::vec3(0.0f, 0.1f, 0.0f));
-	//c->SetTransfrom(tran);
+	tran = glm::rotate(tran, 0.1f, glm::vec3(1.0f, 0.1f, 0.0f));
+	c->SetTransfrom(tran);
+	// 
 	world->Update();
+	// render update
+
 }

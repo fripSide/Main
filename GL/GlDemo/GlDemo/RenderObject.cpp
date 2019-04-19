@@ -64,6 +64,7 @@ void Mesh::Draw() {
 	assert(m_VAO != 0);
 	glBindVertexArray(m_VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+	//drawMode = GL_LINES;
 	if (Indices.size() > 0) {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
 		glDrawElements(drawMode, Indices.size(), GL_UNSIGNED_INT, 0);
@@ -177,11 +178,12 @@ void RenderObject::SetupUniforms() {
 	// set mvp
 	auto & world_uniforms = mtl_->GetUnifromNames();
 	//auto &world = World::
-	auto mvp = GetTransfrom();
+	auto m = GetTransfrom();
 	auto camera = World::Instance()->mainCamera_;
 	auto v = camera.GetViewMatrix();
-	//auto p = 
+	auto p = camera.GetProjectMatrix();
 	//auto pj = 
+	auto mvp = p * v * m;
 	mtl_->GetShader()->setMat4("mvp", mvp);
 
 	mtl_->SetupUniforms();

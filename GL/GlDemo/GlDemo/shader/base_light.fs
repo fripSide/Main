@@ -11,5 +11,5 @@ void main()
 {
      FragColor = vec4(PColor, 1.0);
 	//FragColor = vec4(uv0.x, uv0.y, uv0.x, 1.0);
-	//FragColor = mix(texture(texture1, uv0), texture(texture2, uv0), 0.2);
+	FragColor = mix(texture(texture1, uv0), texture(texture2, uv0), 0.2);
 } 
