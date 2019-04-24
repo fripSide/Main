@@ -40,6 +40,28 @@ QuadMesh::QuadMesh() {
 	Init();
 }
 
+ScreenMesh::ScreenMesh() {
+	Positions.clear();
+	Positions.emplace_back(-1.f, 1.f, 0.0f);
+	Positions.emplace_back(-1.f, -1.f, 0.0f);
+	Positions.emplace_back(1.f, -1.f, 0.0f);
+
+	Positions.emplace_back(-1.f, 1.f, 0.0f);
+	Positions.emplace_back(1.f, -1.f, 0.0f);
+	Positions.emplace_back(1.f, 1.f, 0.0f);
+	
+
+	UV.clear();
+	UV.emplace_back(0.f, 1.f);
+	UV.emplace_back(0.f, 0.f);
+	UV.emplace_back(1.f, 0.f);
+
+	UV.emplace_back(0.f, 1.f);
+	UV.emplace_back(1.f, 0.f);
+	UV.emplace_back(1.0f, 1.0f);
+	Init();
+}
+
 CubeMesh::CubeMesh() {
 	Positions.clear();
 	Positions.emplace_back(-0.5f, -0.5f, -0.5f);
@@ -3400,11 +3422,11 @@ TeapotMesh::TeapotMesh() {
 		0.264246f, 0.963858f, -0.0339504f, 0.588024f, 0.806503f, 0.0614927f,
 		0.753961f, -0.652834f, -0.0731568f
 	};
-
+	Positions.clear();
 	int vertexes = 9780 / 3;
 	for (int i = 0; i < vertexes; i++) {
-		Positions.emplace_back(teapotVertices[i], teapotVertices[i + 1], teapotVertices[i + 2]);
-		Normals.emplace_back(teapotNormals[i], teapotNormals[i + 1], teapotNormals[i + 2]);
+		Positions.emplace_back(teapotVertices[i * 3], teapotVertices[i * 3 + 1], teapotVertices[i * 3 + 2]);
+		Normals.emplace_back(teapotNormals[i * 3], teapotNormals[i * 3 + 1], teapotNormals[i * 3 + 2]);
 	}
 
 	// indices for teapot
@@ -3848,17 +3870,64 @@ TeapotMesh::TeapotMesh() {
 	Init();
 }
 
-Plane::Plane() {
-	mesh_ = new QuadMesh;
-	mtl_ = new BaseLightMeterial();
+
+SkyboxMesh::SkyboxMesh() {
+	float skyboxVertices[] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f
+	};
+	int len = 108;
+	for (int i = 0; i < len / 3; i++) {
+		Positions.emplace_back(skyboxVertices[i * 3], skyboxVertices[i * 3 + 1], skyboxVertices[i * 3 + 2]);
+	}
+
+	Init();
 }
 
-Cube::Cube() {
-	mesh_ = new CubeMesh;
-	mtl_ = new BaseLightMeterial;
+void SkyboxMesh::SetGL() {
+	glDepthFunc(GL_LEQUAL);
 }
 
-BaseLightMeterial::BaseLightMeterial() {
-	shader_ = new Shader();
-	shader_->SetShaders("shader/base_light.vs", "shader/base_light.fs");
+void SkyboxMesh::ResetGL() {
+	glDepthFunc(GL_LESS); // set depth function back to default
 }

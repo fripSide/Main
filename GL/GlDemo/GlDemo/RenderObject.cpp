@@ -46,12 +46,14 @@ void Mesh::Init() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, strip, (void*) offset);
 	offset += 3* sizeof(GLfloat) * Positions.size();
 	if (UV.size() > 0) {
+		//strip = 2 * sizeof(GLfloat);
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, strip, (void*)offset);
 		offset += 2 * sizeof(float) * UV.size();
 	}
 
 	if (Normals.size() > 0) {
+		//strip = 3 * sizeof(GLfloat);
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, strip, (void*)offset);
 		offset += 3 * sizeof(GLfloat) * Normals.size();
@@ -61,6 +63,7 @@ void Mesh::Init() {
 }
 
 void Mesh::Draw() {
+	SetGL();
 	assert(m_VAO != 0);
 	glBindVertexArray(m_VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
@@ -72,6 +75,7 @@ void Mesh::Draw() {
 	else {
 		glDrawArrays(drawMode, 0, Positions.size());
 	}
+	ResetGL();
 }
 
 
@@ -87,19 +91,23 @@ void RenderObject::Draw() {
 	}
 }
 
-Shader* Meterial::GetShader() {
+Shader* Material::GetShader() {
 	return shader_;
 }
 
-const std::vector<std::string> & Meterial::GetUnifromNames() {
-	return {"mvp"};
+Material::Material() {
+	scene_uniform_names_ = { "mvp" };
+}
+
+const std::vector<std::string> & Material::GetUnifromNames() {
+	return scene_uniform_names_;
 }
 
 /*
 绑定纹理：
 设置每个纹理 sample名称对应的unit
 */
-void Meterial::SetTexture(std::string name, Texture *val, unsigned int unit) {
+void Material::SetTexture(std::string name, Texture *val, unsigned int unit) {
 	if (val == NULL) return;
 	samplerUniforms_[name].unit_ = unit;
 	samplerUniforms_[name].texture_ = val;
@@ -120,16 +128,30 @@ void Meterial::SetTexture(std::string name, Texture *val, unsigned int unit) {
 }
 
 // 设置纹理和其他材质的unifroms
-void Meterial::SetupUniforms() {
+void Material::SetupUniforms() {
 	for (auto & it: samplerUniforms_) {
 		if (it.second.val_type == SHADER_VALUE_SAMPLER3D) {
 
-		} else {
+		} 
+		else if (it.second.val_type == SHADER_TYPE_SAMPLERCUBE) {
+			it.second.cube_map_->Bind(it.second.unit_);
+		}
+		else {
 			it.second.texture_->Bind(it.second.unit_);
 		}
 	}
 	for (auto & it : uniforms_) {
 
+	}
+}
+
+void Material::SetCubeMap(std::string name, CubeMap *cube, unsigned int unit) {
+	samplerUniforms_[name].unit_ = unit;
+	samplerUniforms_[name].val_type = SHADER_TYPE_SAMPLERCUBE;
+	samplerUniforms_[name].cube_map_ = cube;
+	if (shader_) {
+		shader_->use();
+		shader_->setInt(name, unit);
 	}
 }
 
@@ -173,19 +195,7 @@ void RenderObject::SetPosition(const glm::vec3 &position) {
 	position_ = position;
 }
 
-// 投影变换测试
+// 设置场景uniforms
 void RenderObject::SetupUniforms() {
-	// set mvp
-	auto & world_uniforms = mtl_->GetUnifromNames();
-	//auto &world = World::
-	auto m = GetTransfrom();
-	auto camera = World::Instance()->mainCamera_;
-	auto v = camera.GetViewMatrix();
-	auto p = camera.GetProjectMatrix();
-	//auto pj = 
-	auto mvp = p * v * m;
-	mtl_->GetShader()->setMat4("mvp", mvp);
-
-	mtl_->SetupUniforms();
-	
+	World::Instance()->SetSceneUniforms(this);
 }

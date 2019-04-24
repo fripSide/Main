@@ -8,11 +8,13 @@ using namespace GLDemo;
 
 
 Camera::Camera(glm::vec3 eye, glm::vec3 up): 
-	position_(eye), up_(up), front_(glm::vec3(0.0f, 1.0f, 0.0f)) {
+	position_(eye), up_(up), front_(glm::vec3(0.0f, 0.0f, -1.0f)) {
+	world_up_ = glm::vec3(0.f, 1.f, 0.f);
+	updateCameraVectors();
 }
 
 glm::mat4 Camera::GetViewMatrix() {
-	return lookAt(position_, glm::vec3(0, 0, 0), up_);
+	return lookAt(position_, position_ + front_, up_);
 }
 
 glm::mat4 Camera::lookAt(glm::vec3 eye, glm::vec3 target, glm::vec3 viewUp) {
@@ -82,4 +84,48 @@ glm::mat4 Camera::Orthographic(float left, float right, float bottom, float top,
 
 glm::mat4 Camera::GetProjectMatrix() {
 	return projection_mat_;
+}
+
+void Camera::ProcessKeyboard(CameraMovement direction, float deltaTime)
+{
+	float velocity = move_speed_ * deltaTime;
+	if (direction == FORWARD)
+		position_ += front_ * velocity;
+	if (direction == BACKWARD)
+		position_ -= front_ * velocity;
+	if (direction == LEFT)
+		position_ -= right_ * velocity;
+	if (direction == RIGHT)
+		position_ += right_ * velocity;
+}
+
+void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch) {
+	xoffset *= mouse_sensitive_;
+	yoffset *= mouse_sensitive_;
+
+	yaw_ += xoffset;
+	pitch_ += yoffset;
+
+	// Make sure that when pitch is out of bounds, screen doesn't get flipped
+	if (constrainPitch)
+	{
+		if (pitch_ > 89.0f)
+			pitch_ = 89.0f;
+		if (pitch_ < -89.0f)
+			pitch_ = -89.0f;
+	}
+
+	// Update Front, Right and Up Vectors using the updated Euler angles
+	updateCameraVectors();
+}
+
+void Camera::updateCameraVectors() {
+	glm::vec3 front;
+	front.x = cos(glm::radians(yaw_)) * cos(glm::radians(pitch_));
+	front.y = sin(glm::radians(pitch_));
+	front.z = sin(glm::radians(yaw_)) * cos(glm::radians(pitch_));
+
+	front_ = glm::normalize(front);
+	right_ = glm::normalize(glm::cross(front_, world_up_));
+	up_ = glm::normalize(glm::cross(right_, front_));
 }

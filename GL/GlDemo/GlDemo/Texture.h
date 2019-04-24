@@ -2,6 +2,7 @@
 #include <string>
 #include "stb_image.h"
 #include <glad/glad.h>
+#include <vector>
 
 namespace GLDemo {
 	class Texture {
@@ -36,5 +37,16 @@ namespace GLDemo {
 		void SetWrapMode(GLenum wrapMode, bool bind = false);
 
 		void GenGLTexture2D(unsigned int width, unsigned int height, GLenum internalFormat, GLenum format, GLenum type, void* data);
+	};
+
+	class CubeMap {
+	public:
+		unsigned int id_;
+
+		void Bind(int unit = 0);
+		void UnBind();
+
+
+		static CubeMap* LoadCubeMap(const std::vector<std::string> & faces);
 	};
 }

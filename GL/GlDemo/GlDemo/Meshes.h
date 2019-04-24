@@ -10,6 +10,11 @@ namespace GLDemo {
 		QuadMesh();
 	};
 
+	class ScreenMesh : public Mesh {
+	public:
+		ScreenMesh();
+	};
+
 	class CubeMesh : public Mesh {
 	public:
 		CubeMesh();
@@ -20,26 +25,10 @@ namespace GLDemo {
 		TeapotMesh();
 	};
 
-	class Plane : public RenderObject {
+	class SkyboxMesh : public Mesh {
 	public:
-		Plane();
-	};
-
-	class Cube : public RenderObject {
-	public:
-		Cube();
-	};
-
-	class BaseLightMeterial : public Meterial {
-	public:
-		BaseLightMeterial();
-	};
-
-	class Teapot : public RenderObject {
-	public:
-		Teapot() {
-			mesh_ = new TeapotMesh();
-			mtl_ = new BaseLightMeterial();
-		}
+		SkyboxMesh();
+		void SetGL() override;
+		void ResetGL() override;
 	};
 }

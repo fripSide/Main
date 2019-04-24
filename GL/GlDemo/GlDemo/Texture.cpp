@@ -74,3 +74,37 @@ void Texture::Bind(int unit) {
 void Texture::UnBind() {
 	glBindTexture(target_, 0);
 }
+
+CubeMap* CubeMap::LoadCubeMap(const std::vector<std::string> &faces) {
+	CubeMap *tex = new CubeMap;
+	glGenTextures(1, &tex->id_);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, tex->id_);
+	int width, height, nrChannels;
+	for (int i = 0; i < faces.size(); i++) {
+		unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+		if (data) {
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		}
+		else {
+			Log("Cubemap texture failed to load:%s\n", faces[i].c_str());
+		}
+		stbi_image_free(data);
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	return tex;
+}
+
+void CubeMap::Bind(int unit) {
+	if (unit >= 0)
+		glActiveTexture(GL_TEXTURE0 + unit);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, id_);
+}
+
+void CubeMap::UnBind() {
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+}

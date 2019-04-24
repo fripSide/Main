@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include "Texture.h"
 
 namespace GLDemo {
 
@@ -15,7 +16,8 @@ namespace GLDemo {
 		SHADER_VALUE_INT,
 		SHADER_VALUE_SAMPLER1D,
 		SHADER_VALUE_SAMPLER2D,
-		SHADER_VALUE_SAMPLER3D
+		SHADER_VALUE_SAMPLER3D,
+		SHADER_TYPE_SAMPLERCUBE,
 	};
 
 	struct Uniform {
@@ -41,6 +43,7 @@ namespace GLDemo {
 		unsigned int unit_;
 		union {
 			Texture * texture_;
+			CubeMap * cube_map_;
 		};
 	};
 

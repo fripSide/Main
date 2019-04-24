@@ -62,6 +62,7 @@ int main() {
 	}
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
 	glEnable(GL_DEPTH_TEST);
 
 	//render.onSurfaceCreated();

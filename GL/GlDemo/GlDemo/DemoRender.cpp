@@ -1,6 +1,6 @@
 #include "DemoRender.h"
 #include "RenderObject.h"
-#include "Meshes.h"
+#include "SceneItems.h"
 
 #include "glm/glm.hpp"
 #include "Camera.h"
@@ -13,7 +13,8 @@
 using namespace GLDemo;
 
 void DemoRender::onSurfaceChanged(int width, int height) {
-
+	glViewport(0, 0, width, height);
+	World::Instance()->SetScreenSize(width, height);
 }
 
 const float M_PI = 3.14159265358979323846f;
@@ -112,31 +113,38 @@ void test_texture_mix(World & world) {
 	world.AddChildNode(c);
 
 	//world.AddChildNode(c);
-	tran = glm::scale(tran, {0.1, 0.1, 0.1});
+	tran = glm::scale(glm::mat4(), {0.1, 0.1, 0.1});
 	auto t = new Teapot;
+	t->mtl_->SetTexture("texture1", Texture::LoadTexture("res/container.jpg"), 0);
+	t->mtl_->SetTexture("texture2", Texture::LoadTexture("res/awesomeface.png"), 1);
+	//tran = glm::translate(tran, { 0, 0, -10.f });
 	t->SetTransfrom(tran);
-	//world.AddChildNode(t);
+	world.AddChildNode(t);
+
+	SkyBox *sk = new SkyBox;
+	world.AddChildNode(sk);
+
 }
 
 void DemoRender::onKeyEvent(int key_code) {
-	Log("key_code %d\n", key_code);
-
+	//Log("key_code %d\n", key_code);
+	CameraMovement dir = FORWARD;
 	if (key_code == GLFW_KEY_W || key_code == GLFW_KEY_UP) {
-		world->mainCamera_.position_ += world->mainCamera_.front_ * delta_time;
+		dir = FORWARD;
 	}
 
 	if (key_code == GLFW_KEY_A || key_code == GLFW_KEY_LEFT) {
-		world->mainCamera_.position_ += world->mainCamera_.front_ * delta_time;
+		dir = LEFT;
 	}
 
 	if (key_code == GLFW_KEY_S || key_code == GLFW_KEY_DOWN) {
-		world->mainCamera_.position_ += world->mainCamera_.front_ * delta_time;
+		dir = BACKWARD;
 	}
 
 	if (key_code == GLFW_KEY_D || key_code == GLFW_KEY_RIGHT) {
-		world->mainCamera_.position_ += world->mainCamera_.front_ * delta_time;
+		dir = RIGHT;
 	}
-
+	world->mainCamera_.ProcessKeyboard(dir, delta_time);
 }
 
 void DemoRender::onMouseEvent(double xpos, double ypos) {
@@ -144,7 +152,7 @@ void DemoRender::onMouseEvent(double xpos, double ypos) {
 	double yOffset = lastY_ - ypos;
 	lastX_ = xpos;
 	lastY_ = ypos;
-	
+	world->mainCamera_.ProcessMouseMovement(xOffset, yOffset);
 }
 
 /*
@@ -160,7 +168,7 @@ void DemoRender::onSurfaceCreated() {
 	world = World::Instance();
 	// 设置相机位置：
 	world->mainCamera_.Perspective(glm::radians(45.0f), 4 / 3.f, 0.1f, 100.f);
-
+	world->SetScreenSize(800, 600);
 	// 基础变换
 	//test_baisc_transfrom(world);
 	//test_camera(world);
@@ -173,8 +181,7 @@ void DemoRender::onDrawFrame() {
 	delta_time = current_ti - last_frame_ti;
 	last_frame_ti = current_ti;
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glm::mat4 tran;
 	//tran = glm::translate(glm::mat4(), { 0.3f, 0.3f, 0.f });
 	tran = glm::rotate(tran, 0.1f, glm::vec3(1.0f, 0.1f, 0.0f));
@@ -182,5 +189,4 @@ void DemoRender::onDrawFrame() {
 	// 
 	world->Update();
 	// render update
-
 }

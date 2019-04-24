@@ -3,6 +3,7 @@
 #include <vector>
 #include <glad/glad.h> 
 #include <map>
+#include "Texture.h"
 
 namespace GLDemo {
 
@@ -21,16 +22,20 @@ namespace GLDemo {
 	将Unifroms参数保存到material中，在渲染器修改。
 	shader.use()之后需要再设置一次uniforms
 	*/
-	class Meterial {
+	class Material {
 	protected:
 		Shader *shader_;
 	public:
+		Material();
 		Shader* GetShader();
 		const std::vector<std::string> & GetUnifromNames();
-		void SetTexture(std::string name, Texture *val, unsigned int unit);
+		void SetTexture(std::string name, Texture *val, unsigned int unit = 0);
+		void SetCubeMap(std::string name, CubeMap *cube, unsigned int unit = 0);
 		void SetupUniforms();
+		std::vector<std::string> scene_uniform_names_;
 
 	protected:
+		
 		std::map<std::string, UniformValue> uniforms_;
 		// textures
 		std::map<std::string, UniformTextureSampler> samplerUniforms_;
@@ -49,6 +54,8 @@ namespace GLDemo {
 
 	public:
 		Mesh();
+		virtual void SetGL() {};
+		virtual void ResetGL() {};
 		void Draw();
 		void Init();
 	};
@@ -56,7 +63,7 @@ namespace GLDemo {
 	class RenderObject {
 	public:
 		Mesh *mesh_;
-		Meterial *mtl_;
+		Material *mtl_;
 
 		RenderObject *parent_;
 		std::vector<RenderObject*> children_;

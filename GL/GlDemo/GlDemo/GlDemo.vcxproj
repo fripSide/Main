@@ -130,6 +130,9 @@
     <ClCompile Include="main.cc" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="Meshes.cpp" />
+    <ClCompile Include="RenderPass.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="SceneItems.cpp" />
     <ClCompile Include="stb_image.cc" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="utils.cpp" />
@@ -141,6 +144,9 @@
     <ClInclude Include="Render.h" />
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="Meshes.h" />
+    <ClInclude Include="RenderPass.h" />
+    <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="SceneItems.h" />
     <ClInclude Include="Shader.hpp" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
