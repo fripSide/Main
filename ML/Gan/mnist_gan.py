@@ -46,6 +46,7 @@ generator.add(Dense(1024))
 generator.add(LeakyReLU(0.2))
 generator.add(Dense(784, activation='tanh'))
 generator.compile(loss='binary_crossentropy', optimizer=adam)
+generator.summary()
 
 discriminator = Sequential()
 discriminator.add(Dense(1024, input_dim=784, kernel_initializer=initializers.RandomNormal(stddev=0.02)))
@@ -59,6 +60,7 @@ discriminator.add(LeakyReLU(0.2))
 discriminator.add(Dropout(0.3))
 discriminator.add(Dense(1, activation='sigmoid'))
 discriminator.compile(loss='binary_crossentropy', optimizer=adam)
+discriminator.summary()
 
 # Combined network
 discriminator.trainable = False
@@ -141,7 +143,7 @@ def train(epochs=1, batchSize=128):
         if e == 1 or e % 20 == 0:
             plotGeneratedImages(e)
             saveModels(e)
-
+        break
     # Plot losses from every epoch
     plotLoss(e)
 

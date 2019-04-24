@@ -34,6 +34,9 @@ void RenderPass::OnRenderImage(RenderTarget *src, RenderTarget *dest) {
 /*
 后处理
 https://learnopengl-cn.readthedocs.io/zh/latest/04%20Advanced%20OpenGL/05%20Framebuffers/
+
+利用卷积实现屏幕效果
+https://blog.csdn.net/fansongy/article/details/79263735
 */
 void RenderPass::PassNormal() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
