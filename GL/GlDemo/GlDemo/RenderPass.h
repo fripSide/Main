@@ -20,7 +20,9 @@ namespace GLDemo {
 
 		void RenderToScreen();
 
-		RenderTarget *post_effect_ = NULL;
+		void Setup();
+
+		RenderTarget *post_effect_buffer_ = NULL;
 		RenderTarget *screen_ = NULL;
 		RenderObject *screen_quad_;
 		bool use_post_process_ = true;

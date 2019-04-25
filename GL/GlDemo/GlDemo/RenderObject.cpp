@@ -169,6 +169,7 @@ void RenderObject::DoDraw() {
 }
 
 void RenderObject::SetTransfrom(const glm::mat4 &trans) {
+	prev_trans_ = transform_;
 	if (parent_) {
 		transform_ = parent_->transform_ * transform_;
 	}

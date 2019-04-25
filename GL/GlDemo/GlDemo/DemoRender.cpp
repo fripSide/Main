@@ -92,7 +92,7 @@ void test_camera(World & world) {
 /*
 rotate 动一次还是一直动
 */
-Cube *c;
+RenderObject *c = NULL;
 void test_texture_mix(World & world) {
 	auto p = new Plane;
 	p->mtl_->SetTexture("texture1", Texture::LoadTexture("res/container.jpg"), 0);
@@ -107,7 +107,7 @@ void test_texture_mix(World & world) {
 	c->mtl_->SetTexture("texture1", Texture::LoadTexture("res/container.jpg"), 0);
 	c->mtl_->SetTexture("texture2", Texture::LoadTexture("res/awesomeface.png"), 1);
 	glm::mat4 tran;
-	tran = glm::translate(glm::mat4(), { 0.3f, 0.3f, -0.5f });
+	tran = glm::translate(glm::mat4(), { -0.5f, 0.3f, -10.f });
 	tran = glm::rotate(tran, (GLfloat)glfwGetTime() * 0.1f, glm::vec3(0.0f, 0.1f, 0.0f));
 	c->SetTransfrom(tran);
 	world.AddChildNode(c);
@@ -124,6 +124,32 @@ void test_texture_mix(World & world) {
 	SkyBox *sk = new SkyBox;
 	world.AddChildNode(sk);
 
+}
+
+void test_post_effect_blur(World & world) {
+	c = new RenderObject;
+	c->mesh_ = new CubeMesh;
+	c->mtl_ = new ShaderOnlyMaterial("shader/motion_obj.vs", "shader/motion_obj.fs");
+	c->mtl_->scene_uniform_names_ = { "vp" }; // 
+	c->mtl_->GetShader()->setMat4("curTran", c->transform_);
+	c->mtl_->GetShader()->setMat4("prevTran", c->prev_trans_);
+	c->mtl_->SetTexture("texture1", Texture::LoadTexture("res/container.jpg"), 0);
+	c->mtl_->SetTexture("texture2", Texture::LoadTexture("res/awesomeface.png"), 1);
+	glm::mat4 tran;
+	tran = glm::translate(glm::mat4(), { -0.5f, 0.3f, -10.f });
+	tran = glm::rotate(tran, (GLfloat)glfwGetTime() * 0.1f, glm::vec3(0.0f, 0.1f, 0.0f));
+	c->SetTransfrom(tran);
+	world.AddChildNode(c);
+
+	auto t = new Teapot;
+	t->mtl_->SetTexture("texture1", Texture::LoadTexture("res/container.jpg"), 0);
+	t->mtl_->SetTexture("texture2", Texture::LoadTexture("res/awesomeface.png"), 1);
+	tran = glm::scale(glm::mat4(), { 0.1, 0.1, 0.1 });
+	t->SetTransfrom(tran);
+	world.AddChildNode(t);
+
+	SkyBox *sk = new SkyBox;
+	world.AddChildNode(sk);
 }
 
 void DemoRender::onKeyEvent(int key_code) {
@@ -160,8 +186,6 @@ TODO:
 1. 支持贴图（done）。方块加贴图，便于区分旋转角度，基础变换让方块动起来。
 投影变换 （在投影变换之前，矩形经过透视除法，看起来会随屏幕比列发生变化）(推导)
 FPS相机 (相机可移动)
-
-
 TODO: 第一次重构，将Scene对象组织为基于map<int, obj>的基于id的管理，避免直接管理指针。
 */
 void DemoRender::onSurfaceCreated() {
@@ -172,10 +196,13 @@ void DemoRender::onSurfaceCreated() {
 	// 基础变换
 	//test_baisc_transfrom(world);
 	//test_camera(world);
-	test_texture_mix(*world);
+	//test_texture_mix(*world);
+	test_post_effect_blur(*world);
 }
 
-
+float x = 0.0f, delta = 0.001f;
+float len = 0.01f;
+int dir = 1;
 void DemoRender::onDrawFrame() {
 	float current_ti = glfwGetTime();
 	delta_time = current_ti - last_frame_ti;
@@ -183,9 +210,21 @@ void DemoRender::onDrawFrame() {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glm::mat4 tran;
-	//tran = glm::translate(glm::mat4(), { 0.3f, 0.3f, 0.f });
-	tran = glm::rotate(tran, 0.1f, glm::vec3(1.0f, 0.1f, 0.0f));
-	c->SetTransfrom(tran);
+	x += delta * dir;
+	if (x > len || x < -len) {
+		dir = -dir;
+	}
+	tran = glm::translate(glm::mat4(), { x, x, 0.f });
+	tran = glm::rotate(tran, 0.1f, glm::vec3(0.0f, 0.1f, 1.0f));
+
+	if (c != NULL) {
+		c->SetTransfrom(tran);
+		c->mtl_->GetShader()->use();
+		c->mtl_->GetShader()->setMat4("curTran", c->transform_);
+		c->mtl_->GetShader()->setMat4("prevTran", c->prev_trans_);
+	}
+	
+
 	// 
 	world->Update();
 	// render update

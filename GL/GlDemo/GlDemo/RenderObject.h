@@ -68,21 +68,26 @@ namespace GLDemo {
 		RenderObject *parent_;
 		std::vector<RenderObject*> children_;
 
+		glm::mat4 prev_trans_ = glm::mat4(1);
+		glm::mat4 transform_ = glm::mat4(1);
+
 	public:
 		void AddChild(RenderObject *child);
 		void Draw();
 		void SetTransfrom(const glm::mat4 &trans);
-		glm::mat4 GetTransfrom();
+		//glm::mat4 GetTransfrom();
 		void SetPosition(const glm::vec3 &position);
 		glm::vec3 GetLocalPostion();
 		glm::vec3 GetWorldPostion();
+		glm::mat4 GetTransfrom();
 
 	private:
 		void DoDraw();
 		void SetupUniforms();
+	
 
 	private:
-		glm::mat4 transform_ = glm::mat4(1);
+		
 		glm::vec3 position_= glm::vec3(0);
 		bool dirty_;
 	};

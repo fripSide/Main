@@ -63,19 +63,21 @@ int main() {
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 
-	//render.onSurfaceCreated();
 	render->onSurfaceCreated();
 	
 	// main loop
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
-		//render.onDrawFrame();
 		render->onDrawFrame();
 		// process event
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+		for (GLenum err; (err = glGetError()) != GL_NO_ERROR;)
+		{
+			Log("Error %d\n", err);
+		}
 	}
 
 	glfwTerminate();

@@ -9,12 +9,13 @@ namespace GLDemo {
 	*/
 	class RenderTarget {
 	public:
+		RenderTarget() {};
 		RenderTarget(int width, int height);
 		virtual ~RenderTarget();
 		virtual void Init();
-		virtual void Use(GLenum type = GL_FRAMEBUFFER);
+		void Use(GLenum type = GL_FRAMEBUFFER);
 		
-		void GenTexture(Texture &texture, bool depth, bool stencil);
+		void GenTexture(Texture &texture, GLenum inner_fmt, GLenum fmt, GLenum attach = GL_COLOR_ATTACHMENT0);
 		void GenRenderBuffer(unsigned int &id, GLenum storage, GLenum attach);
 
 		unsigned int fbo_;
@@ -22,6 +23,13 @@ namespace GLDemo {
 		int width_;
 		int hegiht_;
 
-		Texture target;
+		Texture color_tex_;
+		Texture motion_tex_;
+	};
+
+	class MotionBlurTarget : public RenderTarget {
+	public:
+		MotionBlurTarget(int w, int h);
+		void Init() override;
 	};
 }
