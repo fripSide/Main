@@ -24,5 +24,8 @@ void main()
     Color += texture(screenTexture, TexCoord) * 0.1;
 
     FragColor = Color;
+	vec2 col = texture(screenTexture, TexCoord).xy;
+	vec3 color = texture(screenTexture, TexCoord).rgb;
+	FragColor = vec4(color, 1.0);
 	//FragColor = vec4(texture(screenTexture, TexCoords).rgba);
 }
