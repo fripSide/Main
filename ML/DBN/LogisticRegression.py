@@ -19,7 +19,7 @@ class LogisticRegression(object):
 
 		p_y_given_x = self.output(self.x)
 		d_y = self.y - p_y_given_x
-		print("train shape", self.y.shape, p_y_given_x, self.y, d_y)
+		# print("train shape", self.y.shape, p_y_given_x, self.y, d_y)
 
 		self.W += lr * numpy.dot(self.x.T, d_y) - lr * L2_reg * self.W
 		self.b += lr * numpy.mean(d_y, axis=0)
@@ -44,9 +44,10 @@ class LogisticRegression(object):
 		# return sigmoid(numpy.dot(x, self.W) + self.b)
 		# print("output in: ", x.shape, x, self.W, self.b)
 		val = numpy.dot(x, self.W) + self.b
-		print("XXXXXXXXXXXXXXXXX", val.shape, val, x, self.W, self.b)
+		# print("XXXXXXXXXXXXXXXXX", val.shape, val, x, self.W, self.b)
 		# exit(-1)
-		return softmax(numpy.dot(x, self.W) + self.b)
+		# return softmax(numpy.dot(x, self.W) + self.b)
+		return val
 
 	def predict(self, x):
 		print("predict", x)

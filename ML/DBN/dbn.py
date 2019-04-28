@@ -6,6 +6,7 @@ from rbm import RBM
 from LogisticRegression import LogisticRegression
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics.regression import r2_score, mean_squared_error
 
 class DBN:
 
@@ -113,6 +114,7 @@ def run_test_dbn(pretrain_lr=0.1, pretraining_epochs=1000, k=1, finetune_lr=0.1,
 					 [1, 1, 1, 1, 1, 0]])
 
 	print(dbn.predict(x))
+
 	pass
 
 
@@ -125,10 +127,10 @@ def normalize_data():
 	data = MinMaxScaler().fit_transform(df.iloc[:, :amount_len])
 	df = pd.merge(pd.DataFrame(data), df.iloc[:, amount_len:], left_index=True, right_index=True)
 	train_num = 79
-	use_data = 7
-	X_train = df.iloc[0:train_num, 1:use_data]
+	use_data = 16
+	X_train = df.iloc[0:train_num, 1:]
 	Y_train = df.iloc[0:train_num, :1]
-	X_test = df.iloc[train_num:, 1:use_data]
+	X_test = df.iloc[train_num:, 1:]
 	Y_test = df.iloc[train_num:, :1]
 	print("data size:", X_train.shape, Y_train.shape, X_test.shape, Y_test.shape)
 	return X_train.values, Y_train.values, X_test.values, Y_test.values
@@ -145,6 +147,7 @@ def read_input_data():
 	resutls = dbn.predict(X_test)
 	print("results", resutls, Y_test)
 	print(Y_test.shape)
+	print(r2_score(resutls, Y_test), mean_squared_error(resutls, Y_test))
 
 
 if __name__ == "__main__":
