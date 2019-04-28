@@ -4,3 +4,4 @@
 *.csv
 .idea/
 models/
+__pycache__/
