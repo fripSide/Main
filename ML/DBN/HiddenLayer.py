@@ -47,6 +47,7 @@ class HiddenLayer(object):
 			self.x = input
 
 		linear_output = numpy.dot(self.x, self.W) + self.b
+		# print("hiddenlayer", self.x, self.W, linear_output)
 		return self.activation(linear_output)
 
 	def forward(self, input=None):

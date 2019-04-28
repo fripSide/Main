@@ -4,7 +4,8 @@ from HiddenLayer import HiddenLayer
 from utils import sigmoid
 from rbm import RBM
 from LogisticRegression import LogisticRegression
-
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 
 class DBN:
 
@@ -35,8 +36,8 @@ class DBN:
 							hbias=sigmoid_layer.b)
 			self.rbm_layers.append(rbm_layer)
 
-			ay = self.sigmoid_layers[-1].sample_h_given_v()
-			print("sigmoid_layers", ay.shape)
+			# ay = self.sigmoid_layers[-1].sample_h_given_v()
+			# print("sigmoid_layers", ay.shape, sigmoid_layer.W.shape)
 			self.lr_layer = LogisticRegression(input=self.sigmoid_layers[-1].sample_h_given_v(),
 											   label=self.y, n_in=hidden_layer_sizes[-1], n_out=n_outs)
 			self.finetune_cost = self.lr_layer.negative_log_likelihood()
@@ -53,19 +54,18 @@ class DBN:
 
 			for epoch in range(epochs):
 				rbm.contrastive_divergence(lr=lr, k=k, input=layer_input)
-			# cost = rbm.get_reconstruction_cross_entropy()
-			# print >> sys.stderr, \
-			#        'Pre-training layer %d, epoch %d, cost ' %(i, epoch), cost
+				# cost = rbm.get_reconstruction_cross_entropy()
+				# print('Pre-training layer %d, epoch %d, cost ' %(i, epoch), cost)
 
 	def finetune(self, lr=0.1, epochs=100):
 		layer_input = self.sigmoid_layers[-1].sample_h_given_v()
-
 		# train log_layer
 		epoch = 0
 		done_looping = False
+		print("finetune", layer_input)
 		while (epoch < epochs) and (not done_looping):
 			self.lr_layer.train(lr=lr, input=layer_input)
-			self.finetune_cost = self.lr_layer.negative_log_likelihood()
+			# self.finetune_cost = self.lr_layer.negative_log_likelihood()
 			# print >> sys.stderr, 'Training epoch %d, cost is ' % epoch, self.finetune_cost
 
 			lr *= 0.95
@@ -77,7 +77,7 @@ class DBN:
 		for i in range(self.n_layers):
 			sigmoid_layer = self.sigmoid_layers[i]
 			layer_input = sigmoid_layer.output(input=layer_input)
-
+		print("lr_layer layer_input", layer_input)
 		out = self.lr_layer.predict(layer_input)
 		return out
 
@@ -116,5 +116,37 @@ def run_test_dbn(pretrain_lr=0.1, pretraining_epochs=1000, k=1, finetune_lr=0.1,
 	pass
 
 
+def normalize_data():
+	"""将用电量归一化"""
+	path = "E:\Projects\Main\ML\DBN\data.xlsx"
+	df = pd.read_excel(path)
+	df = df.drop(["日期"], axis=1)
+	amount_len = 7  # 归一化用电量
+	data = MinMaxScaler().fit_transform(df.iloc[:, :amount_len])
+	df = pd.merge(pd.DataFrame(data), df.iloc[:, amount_len:], left_index=True, right_index=True)
+	train_num = 79
+	use_data = 7
+	X_train = df.iloc[0:train_num, 1:use_data]
+	Y_train = df.iloc[0:train_num, :1]
+	X_test = df.iloc[train_num:, 1:use_data]
+	Y_test = df.iloc[train_num:, :1]
+	print("data size:", X_train.shape, Y_train.shape, X_test.shape, Y_test.shape)
+	return X_train.values, Y_train.values, X_test.values, Y_test.values
+
+def read_input_data():
+	X_train, Y_train, X_test, Y_test = normalize_data()
+	rng = numpy.random.RandomState(123)
+	# print(normalized_X_train.values, normalized_Y_train)
+	# print(normalized_X_train.shape, normalized_Y_train.shape)
+	dbn = DBN(input=X_train, label=Y_train, n_ins=X_train.shape[1],
+			  hidden_layer_sizes=[80] * 10, n_outs=1, rng=rng)
+	dbn.pretrain(lr=0.001, k=1, epochs=1000)
+	dbn.finetune(lr=0.001, epochs=200)
+	resutls = dbn.predict(X_test)
+	print("results", resutls, Y_test)
+	print(Y_test.shape)
+
+
 if __name__ == "__main__":
-	run_test_dbn()
+	# run_test_dbn()
+	read_input_data()

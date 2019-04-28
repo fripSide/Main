@@ -2,7 +2,7 @@
 
 import sys
 import numpy
-from utils import softmax
+from utils import softmax, sigmoid
 
 
 class LogisticRegression(object):
@@ -13,13 +13,13 @@ class LogisticRegression(object):
 		self.W = numpy.zeros((n_in, n_out))  # initialize W 0
 		self.b = numpy.zeros(n_out)  # initialize bias 0
 
-	def train(self, lr=0.1, input=None, L2_reg=0.00):
+	def train(self, lr=0.1, input=None, L2_reg=0.001):
 		if input is not None:
 			self.x = input
 
 		p_y_given_x = self.output(self.x)
-		print(self.y.shape, p_y_given_x.shape)
 		d_y = self.y - p_y_given_x
+		print("train shape", self.y.shape, p_y_given_x, self.y, d_y)
 
 		self.W += lr * numpy.dot(self.x.T, d_y) - lr * L2_reg * self.W
 		self.b += lr * numpy.mean(d_y, axis=0)
@@ -41,11 +41,15 @@ class LogisticRegression(object):
 	#     self.b += lr * numpy.mean(self.d_y, axis=0)
 
 	def output(self, x):
-		print("output in: ", x.shape)
 		# return sigmoid(numpy.dot(x, self.W) + self.b)
+		# print("output in: ", x.shape, x, self.W, self.b)
+		val = numpy.dot(x, self.W) + self.b
+		print("XXXXXXXXXXXXXXXXX", val.shape, val, x, self.W, self.b)
+		# exit(-1)
 		return softmax(numpy.dot(x, self.W) + self.b)
 
 	def predict(self, x):
+		print("predict", x)
 		return self.output(x)
 
 	def negative_log_likelihood(self):
