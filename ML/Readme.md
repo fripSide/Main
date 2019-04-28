@@ -9,3 +9,6 @@ https://www.yuque.com/fripside/rx1ngg/qpq5du/edit
 
 进度:
 1. Basic.ipynb，包括相关库的用法，notebook,Python,NumPy,Pandas
+
+各种算法在Minist上的准确率：
+1. DBN，深度置信网络
