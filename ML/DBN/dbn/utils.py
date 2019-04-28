@@ -12,6 +12,7 @@ def batch_generator(batch_size, data, labels=None):
     idx = np.random.permutation(len(data))
     data_shuffled = data[idx]
     if labels is not None:
+        print("labels", len(labels), idx, len(idx))
         labels_shuffled = labels[idx]
     for i in range(n_batches):
         start = i * batch_size
