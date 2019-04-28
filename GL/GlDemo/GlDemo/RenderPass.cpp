@@ -8,9 +8,9 @@
 using namespace GLDemo;
 
 RenderPass::RenderPass() {
-	screen_quad_ = new ScreenQuad;
-	//screen_quad_ = new RenderObject;
-	screen_quad_->mesh_ = new QuadMesh;
+	//screen_quad_ = new ScreenQuad;
+	screen_quad_ = new RenderObject;
+	screen_quad_->mesh_ = new ScreenMesh;
 	screen_quad_->SetTransfrom(glm::scale(glm::mat4(), { 2, 2, 1 }));
 	screen_quad_->mtl_ = new ShaderOnlyMaterial("shader/motion_blur.vs", "shader/motion_blur.fs");
 }

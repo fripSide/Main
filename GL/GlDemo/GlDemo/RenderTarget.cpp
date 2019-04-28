@@ -37,7 +37,7 @@ void RenderTarget::GenTexture(Texture &texture, GLenum inner_fmt, GLenum fmt, GL
 	texture.GenGLTexture2D(width_, hegiht_, inner_fmt, fmt, GL_FLOAT, NULL);
 	
 	// attach texture to framebuffer
-	glFramebufferTexture2D(GL_FRAMEBUFFER, attach, GL_TEXTURE_2D, fbo_, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, attach, GL_TEXTURE_2D, texture.id_, 0);
 }
 
 void RenderTarget::GenRenderBuffer(unsigned int &id, GLenum storage, GLenum attach) {
