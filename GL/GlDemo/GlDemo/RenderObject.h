@@ -81,8 +81,8 @@ namespace GLDemo {
 		glm::vec3 GetWorldPostion();
 		glm::mat4 GetTransfrom();
 
-	private:
-		void DoDraw();
+	protected:
+		virtual void DoDraw();
 		void SetupUniforms();
 	
 

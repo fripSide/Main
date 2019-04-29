@@ -1,10 +1,11 @@
 #include "RenderObject.h"
 #include "Texture.h"
 #include "World.h"
+#include "utils.h"
 
 using namespace GLDemo;
 
-Mesh::Mesh(): Positions(0), UV(0), Normals(0) {
+Mesh::Mesh(): Positions(0), UV(0), Normals(0), Indices(0) {
 }
 
 
@@ -164,7 +165,6 @@ void RenderObject::DoDraw() {
 	SetupUniforms();
 	// 目前只画triangles
 	mesh_->Draw();
-
 	// TODO，支持画线和点，画出坐标轴和子变换
 }
 

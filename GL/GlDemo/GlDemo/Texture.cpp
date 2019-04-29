@@ -66,6 +66,7 @@ void Texture::GenGLTexture2D(unsigned int width, unsigned int height, GLenum int
 }
 
 void Texture::Bind(int unit) {
+	if (id_ == -1) return;
 	if (unit >= 0) {
 		glActiveTexture(GL_TEXTURE0 + unit);
 	}
@@ -100,6 +101,7 @@ CubeMap* CubeMap::LoadCubeMap(const std::vector<std::string> &faces) {
 }
 
 void CubeMap::Bind(int unit) {
+	if (id_ == -1) return;
 	if (unit >= 0)
 		glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, id_);

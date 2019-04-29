@@ -9,12 +9,43 @@
 #include <iostream>
 #include "utils.h"
 #include "Texture.h"
+#include "SkinnedMesh.h"
 
 using namespace GLDemo;
 
 void DemoRender::onSurfaceChanged(int width, int height) {
 	glViewport(0, 0, width, height);
 	World::Instance()->SetScreenSize(width, height);
+}
+
+
+void DemoRender::onKeyEvent(int key_code) {
+	//Log("key_code %d\n", key_code);
+	CameraMovement dir = FORWARD;
+	if (key_code == GLFW_KEY_W || key_code == GLFW_KEY_UP) {
+		dir = FORWARD;
+	}
+
+	if (key_code == GLFW_KEY_A || key_code == GLFW_KEY_LEFT) {
+		dir = LEFT;
+	}
+
+	if (key_code == GLFW_KEY_S || key_code == GLFW_KEY_DOWN) {
+		dir = BACKWARD;
+	}
+
+	if (key_code == GLFW_KEY_D || key_code == GLFW_KEY_RIGHT) {
+		dir = RIGHT;
+	}
+	world->mainCamera_.ProcessKeyboard(dir, delta_time);
+}
+
+void DemoRender::onMouseEvent(double xpos, double ypos) {
+	double xOffset = xpos - lastX_;
+	double yOffset = lastY_ - ypos;
+	lastX_ = xpos;
+	lastY_ = ypos;
+	world->mainCamera_.ProcessMouseMovement(xOffset, yOffset);
 }
 
 const float M_PI = 3.14159265358979323846f;
@@ -152,33 +183,17 @@ void test_post_effect_blur(World & world) {
 	world.AddChildNode(sk);
 }
 
-void DemoRender::onKeyEvent(int key_code) {
-	//Log("key_code %d\n", key_code);
-	CameraMovement dir = FORWARD;
-	if (key_code == GLFW_KEY_W || key_code == GLFW_KEY_UP) {
-		dir = FORWARD;
-	}
+void test_skinned_animation(World & world) {
+	SkinnedModel *model = new SkinnedModel("res/objects/nanosuit/nanosuit.obj");
+	glm::mat4 mt4;
+	mt4 = glm::translate(mt4, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
+	mt4 = glm::scale(mt4, glm::vec3(0.2f, 0.2f, 0.2f));
+	model->SetTransfrom(mt4);
+	world.AddChildNode(model);
 
-	if (key_code == GLFW_KEY_A || key_code == GLFW_KEY_LEFT) {
-		dir = LEFT;
-	}
-
-	if (key_code == GLFW_KEY_S || key_code == GLFW_KEY_DOWN) {
-		dir = BACKWARD;
-	}
-
-	if (key_code == GLFW_KEY_D || key_code == GLFW_KEY_RIGHT) {
-		dir = RIGHT;
-	}
-	world->mainCamera_.ProcessKeyboard(dir, delta_time);
-}
-
-void DemoRender::onMouseEvent(double xpos, double ypos) {
-	double xOffset = xpos - lastX_;
-	double yOffset = lastY_ - ypos;
-	lastX_ = xpos;
-	lastY_ = ypos;
-	world->mainCamera_.ProcessMouseMovement(xOffset, yOffset);
+	SkyBox *sk = new SkyBox;
+	world.AddChildNode(sk);
+	
 }
 
 /*
@@ -186,7 +201,10 @@ TODO:
 1. 支持贴图（done）。方块加贴图，便于区分旋转角度，基础变换让方块动起来。
 投影变换 （在投影变换之前，矩形经过透视除法，看起来会随屏幕比列发生变化）(推导)
 FPS相机 (相机可移动)
+Load模型和场景。
+实现高级光照，多点光源，读楚留香KM。
 TODO: 第一次重构，将Scene对象组织为基于map<int, obj>的基于id的管理，避免直接管理指针。
+
 */
 void DemoRender::onSurfaceCreated() {
 	world = World::Instance();
@@ -197,7 +215,8 @@ void DemoRender::onSurfaceCreated() {
 	//test_baisc_transfrom(world);
 	//test_camera(world);
 	//test_texture_mix(*world);
-	test_post_effect_blur(*world);
+	//test_post_effect_blur(*world);
+	test_skinned_animation(*world);
 }
 
 float x = 0.0f, delta = 0.001f;
@@ -209,23 +228,26 @@ void DemoRender::onDrawFrame() {
 	last_frame_ti = current_ti;
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glm::mat4 tran;
-	x += delta * dir;
-	if (x > len || x < -len) {
-		dir = -dir;
-	}
-	tran = glm::translate(glm::mat4(), { x, x, 0.f });
-	tran = glm::rotate(tran, 0.1f, glm::vec3(0.0f, 0.1f, 1.0f));
+	
 
 	if (c != NULL) {
+		glm::mat4 tran;
+		x += delta * dir;
+		if (x > len || x < -len) {
+			dir = -dir;
+		}
+		tran = glm::translate(glm::mat4(), { x, x, 0.f });
+		tran = glm::rotate(tran, 0.1f, glm::vec3(0.0f, 0.1f, 1.0f));
+
 		c->SetTransfrom(tran);
 		c->mtl_->GetShader()->use();
 		c->mtl_->GetShader()->setMat4("curTran", c->transform_);
 		c->mtl_->GetShader()->setMat4("prevTran", c->prev_trans_);
 	}
 	
-
+	
 	// 
 	world->Update();
+	glCheckError();
 	// render update
 }
