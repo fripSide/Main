@@ -65,19 +65,18 @@ int main() {
 	glfwSetCursorPosCallback(window, mouse_callback);
 	//glEnable(GL_DEPTH_TEST);
 
+	CheckToEnableGLDebug();
+
 	render->onSurfaceCreated();
 	
 	// main loop
 	while (!glfwWindowShouldClose(window)) {
+		glCheckError();
 		processInput(window);
 		render->onDrawFrame();
 		// process event
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-		for (GLenum err; (err = glGetError()) != GL_NO_ERROR;)
-		{
-			Log("Error %d\n", err);
-		}
 	}
 
 	glfwTerminate();

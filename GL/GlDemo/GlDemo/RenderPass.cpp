@@ -8,11 +8,11 @@
 using namespace GLDemo;
 
 RenderPass::RenderPass() {
-	//screen_quad_ = new ScreenQuad;
-	screen_quad_ = new RenderObject;
+	screen_quad_ = new ScreenQuad;
+	/*screen_quad_ = new RenderObject;
 	screen_quad_->mesh_ = new ScreenMesh;
 	screen_quad_->SetTransfrom(glm::scale(glm::mat4(), { 2, 2, 1 }));
-	screen_quad_->mtl_ = new ShaderOnlyMaterial("shader/motion_blur.vs", "shader/motion_blur.fs");
+	screen_quad_->mtl_ = new ShaderOnlyMaterial("shader/motion_blur.vs", "shader/motion_blur.fs");*/
 }
 
 void RenderPass::Setup() {
@@ -61,7 +61,6 @@ void RenderPass::RenderToScreen() {
 	//glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // set clear color to white (not really necessery actually, since we won't be able to see behind the quad anyways)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	screen_quad_->Draw();
 }
 
@@ -73,8 +72,8 @@ void RenderPass::SetScreenSize(int w, int h) {
 	}
 
 	if (screen_ == NULL) {
-		//screen_ = new RenderTarget(w, h);
-		screen_ = new MotionBlurTarget(w, h);
+		screen_ = new RenderTarget(w, h);
+		//screen_ = new MotionBlurTarget(w, h);
 		post_effect_buffer_ = new RenderTarget(w, h);
 		Setup();
 	}

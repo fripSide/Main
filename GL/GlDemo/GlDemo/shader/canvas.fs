@@ -78,5 +78,5 @@ void main()
     FragColor = vec4(col, 1.0);
 	color = vec4(kernel_effects(), 1.0);
 	//color = radial_blur();
-	FragColor = color;
+	//FragColor = color;
 } 

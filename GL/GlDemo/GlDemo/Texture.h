@@ -7,7 +7,7 @@
 namespace GLDemo {
 	class Texture {
 	public:
-		unsigned int id_;
+		unsigned int id_ = -1;
 		GLenum target_ = GL_TEXTURE_2D;
 		GLenum internalFormat_ = GL_RGBA;
 		GLenum format_ = GL_RGBA;
@@ -41,7 +41,7 @@ namespace GLDemo {
 
 	class CubeMap {
 	public:
-		unsigned int id_;
+		unsigned int id_ = -1;
 
 		void Bind(int unit = 0);
 		void UnBind();

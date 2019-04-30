@@ -18,8 +18,8 @@ namespace GLDemo {
 		void GenTexture(Texture &texture, GLenum inner_fmt, GLenum fmt, GLenum attach = GL_COLOR_ATTACHMENT0);
 		void GenRenderBuffer(unsigned int &id, GLenum storage, GLenum attach);
 
-		unsigned int fbo_;
-		unsigned int buffer_id_;
+		unsigned int fbo_ = -1;
+		unsigned int buffer_id_ = -1;
 		int width_;
 		int hegiht_;
 
@@ -31,5 +31,9 @@ namespace GLDemo {
 	public:
 		MotionBlurTarget(int w, int h);
 		void Init() override;
+	};
+
+	class ShadowMapTarget : public RenderTarget {
+
 	};
 }
