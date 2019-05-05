@@ -2,15 +2,16 @@
 #include "assimp/Importer.hpp"
 #include <assimp/postprocess.h>
 #include "SceneItems.h"
+#include "Texture.h"
 
 #include "utils.h"
 
 using namespace GLDemo;
 
 SkinnedMesh::SkinnedMesh(const std::vector<AssimpVertex> &vertex, std::vector<unsigned int> indices, 
-	std::vector<Texture> textures) {
+	std::vector<Texture*> textures) {
 	Indices = std::move(indices);
-	textures = std::move(textures);
+	textures_ = std::move(textures);
 	for (const auto & val : vertex) {
 		Positions.push_back(std::move(val.Position));
 		UV.push_back(std::move(val.TexCoords));
@@ -21,12 +22,15 @@ SkinnedMesh::SkinnedMesh(const std::vector<AssimpVertex> &vertex, std::vector<un
 
 
 void SkinnedModel::Clear() {
-
+	for (auto & it : tex_cache_) {
+		delete it.second;
+	}
+	tex_cache_.clear();
 }
 
 SkinnedModel::SkinnedModel(const char *path) {
 	LoadMesh(path);
-	mtl_ = new BaseLightMaterial;
+	mtl_ = new ShaderOnlyMaterial("shader/model_loading.vs", "shader/model_loading.fs");
 }
 
 bool SkinnedModel::LoadMesh(const char *path) {
@@ -37,8 +41,10 @@ bool SkinnedModel::LoadMesh(const char *path) {
 		Log("ERROR::ASSIMP::  Path:%s Error:%s\n", path, importer.GetErrorString());
 		return false;
 	}
+	std::string pt(path);
+	directory_ = pt.substr(0, pt.find_last_of('/'));
 
-	Log("node child num: %d\n", assimpScene_->mRootNode->mNumChildren);
+	// Log("node child num: %d\n", assimpScene_->mRootNode->mNumChildren);
 	processNode(assimpScene_->mRootNode, assimpScene_);
 	return true;
 }
@@ -57,7 +63,7 @@ void SkinnedModel::processNode(aiNode *node, const aiScene *scene) {
 SkinnedMesh SkinnedModel::processMesh(aiMesh *mesh, const aiScene *scene) {
 	std::vector<AssimpVertex> vertices;
 	std::vector<unsigned int> indices;
-	std::vector<Texture> textures;
+	std::vector<Texture*> textures;
 	// ¶¥µã
 	for (int i = 0; i < mesh->mNumVertices; i++) {
 		AssimpVertex vertex;
@@ -91,15 +97,47 @@ SkinnedMesh SkinnedModel::processMesh(aiMesh *mesh, const aiScene *scene) {
 		}
 	}
 
-	aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+	if (mesh->mMaterialIndex >= 0) {
+		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+		// 1. diffuse
+		std::vector<Texture*> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+		// 2. specular
+		std::vector<Texture*> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
+		std::vector<Texture*> normalMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_normal");
+		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+
+		std::vector<Texture*> heightMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_height");
+		textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+	}
+	
 	// texture
-
 	return SkinnedMesh(vertices, indices, textures);
 }
 
-std::vector<Texture> SkinnedModel::loadMaterialTextures(aiMaterial *mtl, aiTextureType ttype, const std::string &typeName) {
-	std::vector<Texture> textures;
+std::vector<Texture*> SkinnedModel::loadMaterialTextures(aiMaterial *mtl, aiTextureType ttype, const std::string &typeName) {
+	std::vector<Texture*> textures;
+	for (int i = 0; i < mtl->GetTextureCount(ttype); i++) {
+		aiString str;
+		mtl->GetTexture(ttype, i, &str);
+		std::string pt = directory_ + '/' + std::string(str.C_Str());
+		auto has_load = false;
+		auto t = tex_cache_.find(pt);
+		if (t != tex_cache_.end()) {
+			textures.push_back(t->second);
+			has_load = true;
+			
+		}
+		if (!has_load) {
+			Texture* tex = Texture::LoadTexture(pt.data(), GL_TEXTURE_2D, GL_RGB);
+			tex->tex_usage = ttype;
+			tex->tag = typeName;
+			textures.push_back(tex);
+			tex_cache_[pt] = tex;
+		}
+	}
 	return textures;
 }
 
@@ -109,8 +147,31 @@ void SkinnedModel::DoDraw() {
 	}
 	Shader *shader = mtl_->GetShader();
 	shader->use();
-	SetupUniforms();
+
 	for (auto & mesh : meshes_) {
+		// setup textures
+		unsigned int diffuseNr = 1;
+		unsigned int specularNr = 1;
+		unsigned int normalNr = 1;
+		unsigned int heightNr = 1;
+		for (int i = 0; i < mesh.textures_.size(); i++) {
+
+			Texture* tex = mesh.textures_[i];
+			std::string number;
+			std::string name = tex->tag;
+			if (name == "textrue_diffuse") {
+				number = std::to_string(diffuseNr++);
+			}
+			else if (name == "texture_specular")
+				number = std::to_string(specularNr++); // transfer unsigned int to stream
+			else if (name == "texture_normal")
+				number = std::to_string(normalNr++); // transfer unsigned int to stream
+			else if (name == "texture_height")
+				number = std::to_string(heightNr++); // transfer unsigned int to stream
+
+			mtl_->SetTexture(name + number, tex, i);
+		}
+		SetupUniforms();
 		mesh.Draw();
 	}
 }

@@ -12,9 +12,9 @@ namespace GLDemo {
 	};
 	class SkinnedMesh : public Mesh {
 	public:
-		SkinnedMesh(const std::vector<AssimpVertex> &vertex, std::vector<unsigned int> indices, std::vector<Texture> textures);
+		SkinnedMesh(const std::vector<AssimpVertex> &vertex, std::vector<unsigned int> indices, std::vector<Texture*> textures);
 
-		std::vector<Texture> textures;
+		std::vector<Texture*> textures_;
 	};
 
 	class SkinnedModel : public RenderObject {
@@ -28,11 +28,15 @@ namespace GLDemo {
 	public:
 		const aiScene *assimpScene_ = NULL;
 		std::vector<SkinnedMesh> meshes_;
+		std::map<std::string, Texture*> tex_cache_;
 
 	private:
 		void DoDraw() override;
 		void processNode(aiNode *node, const aiScene *scene);
 		SkinnedMesh processMesh(aiMesh *mesh, const aiScene *scene);
-		std::vector<Texture> loadMaterialTextures(aiMaterial *mtl, aiTextureType ttype, const std::string &typeName);
+		std::vector<Texture*> loadMaterialTextures(aiMaterial *mtl, aiTextureType ttype, const std::string &typeName);
+
+	private:
+		std::string directory_;
 	};
 }

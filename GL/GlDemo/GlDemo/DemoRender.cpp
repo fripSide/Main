@@ -205,6 +205,12 @@ Load模型和场景。
 实现高级光照，多点光源，读楚留香KM。
 TODO: 第一次重构，将Scene对象组织为基于map<int, obj>的基于id的管理，避免直接管理指针。
 
+任务：
+1. 模型贴图，反射。
+2. NormalMap。
+3. 前面遗漏章节。
+4. PBR。
+
 */
 void DemoRender::onSurfaceCreated() {
 	world = World::Instance();

@@ -12,7 +12,7 @@ Texture * Texture::LoadTexture(std::string path, GLenum target, GLenum internalF
 	unsigned char *data = stbi_load(path.data(), &width, &height, &nChannels, 0);
 	//GenGLTexture2D(wi)
 	if (data) {
-		GLenum res_fmt;
+		GLenum res_fmt = GL_RGB;
 		if (nChannels == 1) {
 			res_fmt = GL_RED;
 		}

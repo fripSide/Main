@@ -8,6 +8,7 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics.regression import r2_score, mean_squared_error, mean_absolute_error
 
+
 class DBN:
 
 	def __init__(self, input=None, label=None, n_ins=2, hidden_layer_sizes=[3, 3], n_outs=2, rng=None):
@@ -114,7 +115,6 @@ def run_test_dbn(pretrain_lr=0.1, pretraining_epochs=1000, k=1, finetune_lr=0.1,
 					 [1, 1, 1, 1, 1, 0]])
 
 	print(dbn.predict(x))
-
 	pass
 
 
@@ -129,12 +129,13 @@ def normalize_data():
 	df = pd.DataFrame(MinMaxScaler().fit_transform(df))
 	train_num = 79
 	use_data = 16
-	X_train = df.iloc[0:train_num, 1:]
-	Y_train = df.iloc[0:train_num, :1]
+	X_train = df.iloc[0:, 1:]
+	Y_train = df.iloc[0:, :1]
 	X_test = df.iloc[train_num:, 1:]
 	Y_test = df.iloc[train_num:, :1]
 	print("data size:", X_train.shape, Y_train.shape, X_test.shape, Y_test.shape)
 	return X_train.values, Y_train.values, X_test.values, Y_test.values
+
 
 def read_input_data():
 	X_train, Y_train, X_test, Y_test = normalize_data()

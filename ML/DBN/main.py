@@ -21,11 +21,14 @@ def normalize_data():
 	# data = MinMaxScaler().fit_transform(df.iloc[:, :amount_len])
 	# df = pd.merge(pd.DataFrame(data), df.iloc[:, amount_len:], left_index=True, right_index=True)
 	df = pd.DataFrame(MinMaxScaler().fit_transform(df))
+	print(df.iloc[:, :1])
+	exit(-1)
+	all_len = df.shape[0]
 	train_num = 79
 	use_data = 16
 	X_train = df.iloc[0:train_num, 1:]
 	Y_train = df.iloc[0:train_num, :1]
-	Y_train = pd.merge(Y_train, pd.DataFrame(np.zeros((79, 1))), left_index=True, right_index=True)
+	Y_train = pd.merge(Y_train, pd.DataFrame(np.zeros((all_len, 1))), left_index=True, right_index=True)
 	X_test = df.iloc[train_num:, 1:]
 	Y_test = df.iloc[train_num:, :1]
 	# print(Y_test)
@@ -62,7 +65,15 @@ def run_dbn():
 	print("Y_pred", Y_pred)
 	print("Y_test", Y_test)
 	print('Done.\nR-squared: %f\nMSE: %f' % (r2_score(Y_test, Y_pred), mean_squared_error(Y_test, Y_pred)))
-	print("mean_absolute_error", mean_absolute_error(Y_test, Y_pred))
+	# print("mean_absolute_error", mean_absolute_error(Y_test, Y_pred) / Y_test.shape[0])
+	# print("len", Y_test.shape[0])
+	abs_sum = 0
+	for i in range(0, 13):
+		v1 = Y_pred[i][0]
+		v2 = Y_test[i][0]
+		print(v1, v2)
+		abs_sum += abs(v1 - v2)
+	print("final: ", abs_sum, abs_sum / 13)
 
 # https://github.com/albertbup/deep-belief-network/blob/master/examples/regression_demo.py
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ namespace GLDemo {
 		GLenum internalFormat_ = GL_RGBA;
 		GLenum format_ = GL_RGBA;
 		GLenum data_type_ = GL_UNSIGNED_BYTE;
+		int tex_usage = 0; // 
 		unsigned int width_ = 0;
 		unsigned int height_ = 0;
 		unsigned int depth_ = 0;
@@ -27,6 +28,7 @@ namespace GLDemo {
 		GLenum wrapT_ = GL_REPEAT; // y          
 		GLenum wrapR_ = GL_REPEAT; // z          
 		bool use_mipmap_ = true;
+		std::string tag;
 
 	public:
 		static Texture* LoadTexture(std::string path, GLenum target = GL_TEXTURE_2D, GLenum internalFormat = GL_RGBA, bool srgb = false);

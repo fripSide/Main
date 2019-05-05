@@ -29,6 +29,7 @@ void World::AddChildNode(RenderObject *node) {
 	root->AddChild(node);
 }
 void World::SetScreenSize(int w, int h) {
+	if (w <= 0 || h <= 0) return;
 	render_pass_.SetScreenSize(w, h);
 	mainCamera_.Perspective(glm::radians(45.0f), w / h, 0.1f, 100.f);
 }

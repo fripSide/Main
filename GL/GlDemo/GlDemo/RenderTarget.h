@@ -20,8 +20,8 @@ namespace GLDemo {
 
 		unsigned int fbo_ = -1;
 		unsigned int buffer_id_ = -1;
-		int width_;
-		int hegiht_;
+		int width_ = 0;
+		int hegiht_ = 0;
 
 		Texture color_tex_;
 		Texture motion_tex_;
