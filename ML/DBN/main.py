@@ -14,17 +14,17 @@ import tensorflow as tf
 
 def normalize_data():
 	"""将用电量归一化"""
-	path = r"E:\Main\ML\DBN\data.xlsx"
+	path = r"E:\Projects\Main\ML\DBN\data.xlsx"
 	df = pd.read_excel(path)
 	df = df.drop(["日期"], axis=1)
 	amount_len = 7  # 归一化用电量
 	# data = MinMaxScaler().fit_transform(df.iloc[:, :amount_len])
 	# df = pd.merge(pd.DataFrame(data), df.iloc[:, amount_len:], left_index=True, right_index=True)
 	df = pd.DataFrame(MinMaxScaler().fit_transform(df))
-	print(df.iloc[:, :1])
-	exit(-1)
+	# print(df.iloc[:, :1])
+	# exit(-1)
 	all_len = df.shape[0]
-	train_num = 79
+	train_num = 1000
 	use_data = 16
 	X_train = df.iloc[0:train_num, 1:]
 	Y_train = df.iloc[0:train_num, :1]
