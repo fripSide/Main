@@ -33,11 +33,11 @@ namespace GLDemo {
 		glm::mat4 projection_mat_;
 
 
-		float fov_;
-		float aspect_;
-		float near_;
-		float far_;
-		bool  is_perspective;
+		float fov_ = 45.f;
+		float aspect_ = 0.f;
+		float near_ = 10.f;
+		float far_ = 100.f;
+		bool  is_perspective = true;
 
 		// Euler Angles
 		float yaw_ = -90.f;

@@ -6,7 +6,6 @@ using namespace GLDemo;
 // TODO1, 基本变换， https://blog.csdn.net/wangdingqiaoit/article/details/51531002
 // TODO2, 相机的实现，https://blog.csdn.net/wangdingqiaoit/article/details/51570001
 
-
 Camera::Camera(glm::vec3 eye, glm::vec3 up): 
 	position_(eye), up_(up), front_(glm::vec3(0.0f, 0.0f, -1.0f)) {
 	world_up_ = glm::vec3(0.f, 1.f, 0.f);

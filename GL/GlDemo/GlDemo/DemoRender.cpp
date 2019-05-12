@@ -183,13 +183,31 @@ void test_post_effect_blur(World & world) {
 	world.AddChildNode(sk);
 }
 
+/*
+TODO：
+1. 再次推导透视相机的投影变换，搞清楚为什么物体都被压缩。
+2. SpaceObject和Transform对象的封装。参考Unity和NeoX。
+*/
 void test_skinned_animation(World & world) {
 	SkinnedModel *model = new SkinnedModel("res/objects/nanosuit/nanosuit.obj");
+	glm::vec3 lightPos(3.0f, 3.0f, 3.0f);
 	glm::mat4 mt4;
 	mt4 = glm::translate(mt4, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
 	mt4 = glm::scale(mt4, glm::vec3(0.2f, 0.2f, 0.2f));
 	model->SetTransfrom(mt4);
+	// set material
+
+	model->mtl_->GetShader()->setVec3("lightPos", lightPos);
+
 	world.AddChildNode(model);
+
+	Cube* cu = new Cube;
+	cu->SetMtl(new ShaderOnlyMaterial("shader/box.vs", "shader/box.fs"));
+	glm::mat4 trans;
+	trans = glm::scale(trans, { 0.5f, 0.5f, 0.5f });
+	trans = glm::translate(trans, lightPos);
+	cu->SetTransfrom(trans);
+	world.AddChildNode(cu);
 
 	SkyBox *sk = new SkyBox;
 	world.AddChildNode(sk);

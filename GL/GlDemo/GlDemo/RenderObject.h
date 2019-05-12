@@ -27,6 +27,7 @@ namespace GLDemo {
 		Shader *shader_;
 	public:
 		Material();
+		~Material();
 		Shader* GetShader();
 		const std::vector<std::string> & GetUnifromNames();
 		void SetTexture(std::string name, Texture *val, unsigned int unit = 0);
@@ -77,6 +78,7 @@ namespace GLDemo {
 		void SetTransfrom(const glm::mat4 &trans);
 		//glm::mat4 GetTransfrom();
 		void SetPosition(const glm::vec3 &position);
+		void SetMtl(Material* mtl);
 		glm::vec3 GetLocalPostion();
 		glm::vec3 GetWorldPostion();
 		glm::mat4 GetTransfrom();
@@ -87,7 +89,7 @@ namespace GLDemo {
 	
 
 	private:
-		
+		// TODO，实际上应该用 local transfrom,包含缩放和平移
 		glm::vec3 position_= glm::vec3(0);
 		bool dirty_ = false;
 	};

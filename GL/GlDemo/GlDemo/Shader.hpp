@@ -51,6 +51,9 @@ class Shader {
 public:
 	GLuint ID;
 	Shader(): ID(0) {};
+	~Shader() {
+		glDeleteProgram(ID);
+	}
 	void SetShaders(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
 	{
 		// 1. retrieve the vertex/fragment source code from filePath

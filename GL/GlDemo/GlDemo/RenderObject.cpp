@@ -96,8 +96,14 @@ Shader* Material::GetShader() {
 	return shader_;
 }
 
-Material::Material() {
+Material::Material(): shader_(NULL) {
 	scene_uniform_names_ = { "mvp" };
+}
+
+Material::~Material() {
+	if (shader_ != NULL) {
+		delete shader_;
+	}
 }
 
 const std::vector<std::string> & Material::GetUnifromNames() {
@@ -166,6 +172,14 @@ void RenderObject::DoDraw() {
 	// 目前只画triangles
 	mesh_->Draw();
 	// TODO，支持画线和点，画出坐标轴和子变换
+}
+
+void RenderObject::SetMtl(Material* mtl) {
+	assert(mtl != NULL);
+	if (mtl_ != NULL) {
+		delete mtl_;
+	}
+	mtl_ = mtl;
 }
 
 void RenderObject::SetTransfrom(const glm::mat4 &trans) {
