@@ -1,4 +1,3 @@
-#include <stdafx.h>
 #include "Socket.h"
 #include "../utils.h"
 
@@ -181,7 +180,7 @@ namespace levdb {
 
 	int TCPSocket::AtMark(void) const {
 #ifdef _WIN32
-		unsigned long atmark;  // NOLINT(*)
+		unsigned long atmark = 0;  // NOLINT(*)
 		if (ioctlsocket(sockfd_, SIOCATMARK, &atmark) != NO_ERROR) return -1;
 #else
 		int atmark;

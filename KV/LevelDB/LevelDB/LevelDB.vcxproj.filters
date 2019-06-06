@@ -15,27 +15,33 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="utils.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="net\Socket.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="EventLoop.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Poller.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="LevelDB.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="net\Socket.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EventLoop.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Poller.cc">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
